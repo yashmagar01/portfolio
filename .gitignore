@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+.npm
+
+# Build outputs
+dist/
+
+# Environment variables
+.env
+
+# Backup files
+framer-export-backup/
