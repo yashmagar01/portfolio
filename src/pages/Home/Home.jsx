@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowRight, Github, Twitter, Instagram, Dribbble } from 'lucide-react';
+import { Menu, X, Github, Twitter, Instagram, Dribbble } from 'lucide-react';
+import Hero from '../../components/sections/Hero';
 
 const Home = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -88,116 +89,7 @@ const Home = () => {
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 md:px-10 pt-32 pb-24 overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] bg-gradient-radial from-white/20 to-transparent blur-3xl" />
-        </div>
-
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full">
-          {/* Badge */}
-          <div className="flex justify-center mb-6 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#111] shadow-2xl border border-white/5">
-              <div className="w-3 h-3 bg-white rounded-sm flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-[#111] rounded-full" />
-              </div>
-              <span className="text-sm text-white/90">Vibe Coder</span>
-            </div>
-          </div>
-
-          {/* Main Heading */}
-          <div className="text-center mb-6">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-normal mb-6 tracking-tight animate-fade-in-up">
-              yash magar
-            </h1>
-            
-            {/* Floating Profile Badge */}
-            <a 
-              href="#profile"
-              className="hidden lg:inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#0a0a0a] shadow-inner border border-white/10 hover:scale-110 transition-transform -rotate-[35deg]"
-            >
-              <ArrowRight className="w-6 h-6" />
-            </a>
-          </div>
-
-          {/* Description */}
-          <div className="max-w-[600px] mx-auto text-center mb-8">
-            <p className="text-base md:text-lg text-white/90 leading-relaxed animate-fade-in-up animation-delay-200">
-              I'm a problem-solving coder with a knack for crafting clean, impactful solutions to boost your projects.
-            </p>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-16 animate-fade-in-up animation-delay-400">
-            <a 
-              href="#projects"
-              className="px-8 py-4 rounded-full bg-gradient-to-b from-gray-500/30 to-[#0a0a0a] text-white hover:from-gray-500/40 transition-all"
-            >
-              See All Projects
-            </a>
-            <a 
-              href="#contact"
-              className="px-8 py-4 rounded-full bg-gradient-to-b from-white to-gray-400 text-black hover:from-gray-100 transition-all"
-            >
-              Contact Now
-            </a>
-          </div>
-
-          {/* Testimonial Cards */}
-          <div className="hidden lg:block absolute top-12 right-[310px] max-w-[209px] -rotate-[14deg]">
-            <div className="bg-[#111] rounded-xl p-6 shadow-2xl border border-white/5">
-              <p className="text-sm mb-3">" Working with him was a game changer! "</p>
-              <p className="text-xs text-white/50 text-right">-Tejas</p>
-            </div>
-          </div>
-
-          <div className="hidden lg:block absolute top-[178px] right-5 max-w-[209px] rotate-[6deg]">
-            <div className="bg-[#111] rounded-xl p-6 shadow-2xl border border-white/5">
-              <p className="text-sm mb-3">"Provide Extra Ordinary Results"</p>
-              <p className="text-xs text-white/50 text-right">Vijay</p>
-            </div>
-          </div>
-
-          {/* Project Cards Grid */}
-          <div className="grid md:grid-cols-2 gap-6 max-w-[1400px] mx-auto mt-16">
-            {/* Project 1 */}
-            <div className="space-y-6">
-              <ProjectCard
-                title="AtomAI"
-                image="https://framerusercontent.com/images/MOWvK2SZ1VX1XxKpWbMsodpDQjA.png"
-                href="/projects/atomai"
-              />
-              <ProjectCard
-                title="Polo"
-                image="https://framerusercontent.com/images/lI8guMdEAZPO393np5alz6vOES8.png"
-                href="/projects/polo"
-              />
-            </div>
-
-            {/* Project 2 */}
-            <div className="hidden md:block space-y-6">
-              <ProjectCard
-                title="Fade"
-                image="https://framerusercontent.com/images/UEBCw4blSsdPGjv05eqabw2hpw.png"
-                href="/projects/fade"
-              />
-              <ProjectCard
-                title="Lio"
-                image="https://framerusercontent.com/images/IgQlEJAv5wk5JwCItJr3Hs0HKNc.png"
-                href="/projects/lio"
-              />
-            </div>
-          </div>
-
-          {/* Scroll Down Indicator */}
-          <a 
-            href="#profile"
-            className="flex items-center justify-center w-12 h-12 mx-auto mt-16 rounded-full bg-gradient-to-b from-gray-400/20 to-transparent border border-white/10 hover:scale-110 transition-transform"
-          >
-            <ArrowRight className="w-5 h-5 rotate-90" />
-          </a>
-        </div>
-      </section>
+      <Hero />
 
       {/* Profile Section */}
       <section id="profile" className="relative px-4 md:px-10 py-24 bg-[#0d0d0d] rounded-t-[48px]">
