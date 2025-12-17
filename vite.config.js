@@ -6,5 +6,14 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true
+  },
+  build: {
+    rollupOptions: {
+      input: './index.html'
+    }
+  },
+  // Exclude old Framer HTML files
+  optimizeDeps: {
+    exclude: ['framer']
   }
 })

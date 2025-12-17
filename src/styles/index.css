@@ -1,23 +1,20 @@
-/* ===================================
-   CSS Custom Properties & Variables
-   =================================== */
 :root {
-  /* Colors - extracted from Framer design */
-  --color-bg-primary: #0a0a0a;
-  --color-bg-secondary: #0d0d0d;
+  /* Colors - Deep dark theme matching Framer export */
+  --color-bg-primary: #050505;
+  --color-bg-secondary: #0a0a0a;
   --color-bg-card: #111111;
-  --color-bg-card-hover: #1a1a1a;
-  --color-bg-glass: rgba(17, 17, 17, 0.7);
+  --color-bg-card-hover: #161616;
+  --color-bg-glass: rgba(10, 10, 10, 0.8);
   
   --color-text-primary: #ffffff;
-  --color-text-secondary: rgba(255, 255, 255, 0.6);
-  --color-text-muted: rgba(255, 255, 255, 0.4);
+  --color-text-secondary: #999999;
+  --color-text-muted: #666666;
   
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-light: rgba(255, 255, 255, 0.05);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.15);
   
-  --color-accent: gold;
-  --color-accent-hover: #ffd700;
+  --color-accent: #ffffff; /* Framer site uses mostly monochrome with white accents */
+  --color-accent-gold: #ffd700; /* Keep for specific highlights if needed */
   
   /* Typography */
   --font-heading: 'Satoshi', sans-serif;
@@ -31,11 +28,11 @@
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
-  --text-6xl: 3.75rem;
-  --text-7xl: 4.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3.5rem;
+  --text-6xl: 4.5rem;
+  --text-7xl: 5.5rem; /* Larger hero text */
   
   /* Spacing */
   --space-1: 0.25rem;
@@ -50,31 +47,33 @@
   --space-16: 4rem;
   --space-20: 5rem;
   --space-24: 6rem;
+  --space-32: 8rem;
   
   /* Border Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
-  --radius-full: 9999px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 9999px; /* For buttons */
   
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
-  --transition-slow: 350ms ease;
+  --transition-smooth: 400ms cubic-bezier(0.25, 0.4, 0.25, 1);
   --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
   
   /* Shadows */
-  --shadow-card: 16px 24px 20px 8px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 40px rgba(255, 255, 255, 0.05);
+  --shadow-card: 0 10px 40px -10px rgba(0,0,0,0.5);
+  --shadow-float: 0 20px 50px -10px rgba(0,0,0,0.6);
+  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.15);
   
   /* Container widths */
   --container-sm: 640px;
   --container-md: 768px;
   --container-lg: 1024px;
-  --container-xl: 1200px;
-  --container-2xl: 1400px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
 }
 
 /* ===================================
@@ -96,122 +95,40 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: 1.6;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   background-color: var(--color-bg-primary);
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-img, video {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
-ul, ol {
-  list-style: none;
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 400;
-  line-height: 1.2;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text-primary);
   letter-spacing: -0.02em;
 }
 
-/* ===================================
-   App Layout
-   =================================== */
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+img {
+  display: block;
+  max-width: 100%;
 }
 
-main {
-  flex: 1;
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition-base);
 }
 
-/* ===================================
-   Container
-   =================================== */
-.container {
-  width: 100%;
-  max-width: var(--container-xl);
-  margin: 0 auto;
-  padding: 0 var(--space-6);
-}
-
-.container-sm {
-  max-width: var(--container-md);
-}
-
-.container-lg {
-  max-width: var(--container-2xl);
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
 }
 
 /* ===================================
-   Section Styles
-   =================================== */
-.section {
-  padding: var(--space-24) 0;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: var(--space-12);
-}
-
-.section-title {
-  font-size: var(--text-5xl);
-  font-weight: 400;
-  margin-bottom: var(--space-4);
-}
-
-.section-subtitle {
-  font-family: var(--font-subheading);
-  font-size: var(--text-lg);
-  color: var(--color-text-secondary);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* ===================================
-   Typography Utilities
-   =================================== */
-.text-gradient {
-  background: linear-gradient(135deg, var(--color-text-primary), var(--color-text-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.text-muted {
-  color: var(--color-text-muted);
-}
-
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-
-.text-accent {
-  color: var(--color-accent);
-}
-
-/* ===================================
-   Button Base Styles
+   Button Shared Styles
    =================================== */
 .btn {
   display: inline-flex;
@@ -219,12 +136,13 @@ main {
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill);
   font-family: var(--font-subheading);
-  font-size: var(--text-sm);
   font-weight: 600;
-  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
   transition: all var(--transition-base);
-  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary {
@@ -233,19 +151,41 @@ main {
 }
 
 .btn-primary:hover {
-  background-color: var(--color-text-secondary);
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
 }
 
-.btn-secondary {
-  background-color: transparent;
-  color: var(--color-text-primary);
+.btn-glass {
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  backdrop-filter: blur(10px);
 }
 
-.btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.1);
   border-color: var(--color-text-secondary);
+}
+
+/* ===================================
+   Utilities
+   =================================== */
+.container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.section {
+  padding: var(--space-24) 0;
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #fff, #888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .btn-ghost {

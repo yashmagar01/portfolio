@@ -7,16 +7,7 @@ import './Navbar.css'
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   useEffect(() => {
     setIsOpen(false)
@@ -27,94 +18,52 @@ function Navbar() {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }
     }
-  }
-
-  const menuVariants = {
-    closed: { 
-      opacity: 0,
-      height: 0,
-      transition: { duration: 0.3, ease: 'easeInOut' }
-    },
-    open: { 
-      opacity: 1,
-      height: 'auto',
-      transition: { duration: 0.3, ease: 'easeInOut' }
-    }
-  }
-
-  const linkVariants = {
-    closed: { opacity: 0, x: -20 },
-    open: (i) => ({
-      opacity: 1,
-      x: 0,
-      transition: { delay: i * 0.1, duration: 0.3 }
-    })
   }
 
   return (
     <motion.nav 
-      className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`}
+      className="navbar"
       variants={navVariants}
       initial="hidden"
       animate="visible"
     >
       <div className="navbar__container">
-        <div className="navbar__content">
-          {/* Logo */}
-          <Link to="/" className="navbar__logo">
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+        {/* Logo */}
+        <Link to="/" className="navbar__logo">
+          Yash
+        </Link>
+        
+        {/* Desktop Links - Centered */}
+        <div className="navbar__center">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.path}
+              className={({ isActive }) => 
+                `navbar__link ${isActive ? 'navbar__link--active' : ''}`
+              }
             >
-              Yash
-            </motion.span>
+              {link.name}
+              {link.name === 'Home' && <span className="active-dot" />}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Action Button - Right */}
+        <div className="navbar__right">
+          <Link to="/contact" className="navbar__cta">
+            Let's Talk
           </Link>
-
-          {/* Desktop Navigation */}
-          <div className="navbar__links">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.path}
-                className={({ isActive }) => 
-                  `navbar__link ${isActive ? 'navbar__link--active' : ''}`
-                }
-              >
-                <motion.span
-                  whileHover={{ y: -2 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {link.name}
-                </motion.span>
-              </NavLink>
-            ))}
-          </div>
-
-          {/* CTA Button */}
-          <div className="navbar__cta">
-            <Link to="/contact" className="navbar__button">
-              <motion.span
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="navbar__button-inner"
-              >
-                Let's Talk
-                <ArrowUpRight size={16} />
-              </motion.span>
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <motion.button
+          
+          <button 
             className="navbar__toggle"
             onClick={() => setIsOpen(!isOpen)}
-            whileTap={{ scale: 0.9 }}
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
+          </button>
         </div>
 
         {/* Mobile Menu */}
@@ -122,41 +71,25 @@ function Navbar() {
           {isOpen && (
             <motion.div
               className="navbar__mobile"
-              variants={menuVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
             >
               <div className="navbar__mobile-links">
-                {navLinks.map((link, i) => (
-                  <motion.div
+                {navLinks.map((link) => (
+                  <Link
                     key={link.name}
-                    custom={i}
-                    variants={linkVariants}
-                    initial="closed"
-                    animate="open"
+                    to={link.path}
+                    className="navbar__mobile-link"
                   >
-                    <NavLink
-                      to={link.path}
-                      className={({ isActive }) => 
-                        `navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`
-                      }
-                    >
-                      {link.name}
-                    </NavLink>
-                  </motion.div>
-                ))}
-                <motion.div
-                  custom={navLinks.length}
-                  variants={linkVariants}
-                  initial="closed"
-                  animate="open"
-                >
-                  <Link to="/contact" className="navbar__mobile-cta">
-                    Let's Talk
-                    <ArrowUpRight size={18} />
+                    {link.name}
                   </Link>
-                </motion.div>
+                ))}
+                <div className="navbar__mobile-separator" />
+                <Link to="/contact" className="navbar__mobile-cta">
+                  Let's Talk
+                </Link>
               </div>
             </motion.div>
           )}
