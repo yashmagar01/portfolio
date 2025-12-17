@@ -1,29 +1,24 @@
-import { Routes, Route } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
-import Navbar from './components/Navbar/Navbar'
-import Footer from './components/Footer/Footer'
-import Home from './pages/Home/Home'
-import Projects from './pages/Projects/Projects'
-import ProjectDetail from './pages/ProjectDetail/ProjectDetail'
-import Contact from './pages/Contact/Contact'
+import React from 'react';
+import Navbar from './components/layout/Navbar';
+import Hero from './components/sections/Hero';
+import Profile from './components/sections/Profile';
+import Services from './components/sections/Services';
+import PricingCta from './components/sections/PricingCta';
+import Footer from './components/layout/Footer';
 
 function App() {
   return (
-    <div className="app">
+    <div className="min-h-screen bg-background text-primary font-sans">
       <Navbar />
       <main>
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:slug" element={<ProjectDetail />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </AnimatePresence>
+        <Hero />
+        <Profile />
+        <Services />
+        <PricingCta />
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
