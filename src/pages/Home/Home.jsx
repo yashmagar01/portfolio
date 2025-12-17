@@ -1,32 +1,23 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, ArrowDown, Sparkles } from 'lucide-react'
+import { ArrowUpRight, ArrowRight, Code, Database, Layout, Smartphone, Globe, Cpu } from 'lucide-react'
 import ProjectCard from '../../components/ProjectCard/ProjectCard'
-import { projects, skills } from '../../data/projects'
+import { projects } from '../../data/projects'
 import './Home.css'
 
 function Home() {
-  const featuredProjects = projects.filter(p => p.featured)
+  const featuredProjects = projects.slice(0, 4)
   
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.3 }
+      transition: { staggerChildren: 0.1 }
     }
   }
 
-  const itemVariants = {
+  const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
-    }
-  }
-
-  const heroTextVariants = {
-    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
@@ -34,249 +25,155 @@ function Home() {
     }
   }
 
+  const services = [
+    {
+      title: 'Frontend Dev',
+      description: 'Building responsive, pixel-perfect user interfaces with React, Tailwind, and Framer Motion.',
+      icon: Layout
+    },
+    {
+      title: 'Backend Systems',
+      description: 'Robust server-side architecture using Node.js, Python, and scalable databases.',
+      icon: Database
+    },
+    {
+      title: 'AI Integration',
+      description: 'Leveraging LLMs and machine learning to build intelligent, adaptive applications.',
+      icon: Cpu
+    }
+  ]
+
   return (
     <div className="home">
       {/* Hero Section */}
-      <section className="hero" id="hero-section">
-        <div className="hero__container">
-          <motion.div 
-            className="hero__content"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {/* Badge */}
-            <motion.div className="hero__badge" variants={itemVariants}>
-              <Sparkles size={16} />
-              <span>Available for new projects</span>
-            </motion.div>
-
-            {/* Main Heading */}
-            <motion.h1 className="hero__title" variants={heroTextVariants}>
-              <span className="hero__title-line">Hi, I'm</span>
-              <span className="hero__title-name">Yash Magar</span>
-            </motion.h1>
-
-            {/* Description */}
-            <motion.p className="hero__description" variants={itemVariants}>
-              A passionate developer crafting digital experiences with precision and creativity. 
-              I specialize in building modern web applications that are both beautiful and functional.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div className="hero__actions" variants={itemVariants}>
-              <Link to="/projects" className="hero__btn hero__btn--primary">
-                <motion.span
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  View My Work
-                  <ArrowUpRight size={18} />
-                </motion.span>
-              </Link>
-              <Link to="/contact" className="hero__btn hero__btn--secondary">
-                <motion.span
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Get in Touch
-                </motion.span>
-              </Link>
-            </motion.div>
-
-            {/* Scroll Indicator */}
+      <section className="hero">
+        <div className="container">
+          <div className="hero__grid">
             <motion.div 
-              className="hero__scroll"
-              variants={itemVariants}
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2 }}
+              className="hero__content"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
             >
-              <ArrowDown size={20} />
-              <span>Scroll to explore</span>
+              <motion.div variants={fadeInUp} className="hero__badge">
+                <span className="hero__badge-dot"></span>
+                Available for work
+              </motion.div>
+              
+              <motion.h1 variants={fadeInUp} className="hero__title">
+                Creative <br />
+                <span className="text-muted">Developer.</span>
+              </motion.h1>
+              
+              <motion.p variants={fadeInUp} className="hero__description">
+                I'm Yash Magar, a full-stack developer passionate about building 
+                digital products that merge design with robust engineering.
+              </motion.p>
+              
+              <motion.div variants={fadeInUp} className="hero__actions">
+                <Link to="/contact" className="btn btn-primary">
+                  Start a project
+                </Link>
+                <Link to="/projects" className="btn btn-secondary">
+                  View Work
+                </Link>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </div>
 
-        {/* Background Elements */}
-        <div className="hero__bg">
-          <div className="hero__gradient hero__gradient--1" />
-          <div className="hero__gradient hero__gradient--2" />
-          <div className="hero__grid" />
+            {/* Hero Visual / Stat Card */}
+            <motion.div 
+              className="hero__visual"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <div className="stat-card-display">
+                <div className="stat-card-display__content">
+                  <span className="stat-card-display__number">6+</span>
+                  <span className="stat-card-display__label">Successful <br/>Projects</span>
+                </div>
+                <div className="stat-card-display__decorator"></div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Featured Projects Section */}
-      <section className="featured section" id="projects">
+      {/* Services Section */}
+      <section className="services section">
         <div className="container">
           <motion.div 
             className="section-header"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="section-label">Featured Work</span>
-            <h2 className="section-title">Selected Projects</h2>
-            <p className="section-subtitle">
-              A curated selection of my recent projects showcasing web development, 
-              AI integration, and creative problem-solving.
-            </p>
-          </motion.div>
-
-          <div className="featured__grid">
-            {featuredProjects.map((project, index) => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
-                index={index}
-              />
-            ))}
-          </div>
-
-          <motion.div 
-            className="featured__cta"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <Link to="/projects" className="featured__link">
-              <motion.span
-                whileHover={{ x: 5 }}
-                transition={{ duration: 0.2 }}
-              >
-                View All Projects
-                <ArrowUpRight size={18} />
-              </motion.span>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section className="skills section" id="skills">
-        <div className="container">
-          <motion.div 
-            className="section-header"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="section-label">Expertise</span>
-            <h2 className="section-title">Tech Stack</h2>
-            <p className="section-subtitle">
-              Technologies and tools I use to bring ideas to life.
-            </p>
+            <h2 className="section-title">What I Do</h2>
+            <p className="section-subtitle">Comprehensive solutions for digital challenges</p>
           </motion.div>
 
-          <motion.div 
-            className="skills__grid"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {skills.map((skill, index) => (
-              <motion.div
-                key={skill.name}
-                className="skill-card"
-                variants={itemVariants}
-                whileHover={{ 
-                  y: -5, 
-                  borderColor: 'rgba(255, 255, 255, 0.2)',
-                  transition: { duration: 0.2 }
-                }}
+          <div className="services__grid">
+            {services.map((service, index) => (
+              <motion.div 
+                key={service.title}
+                className="service-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -5 }}
               >
-                <span className="skill-card__name">{skill.name}</span>
-                <span className="skill-card__category">{skill.category}</span>
+                <div className="service-card__icon">
+                  <service.icon size={24} />
+                </div>
+                <h3 className="service-card__title">{service.title}</h3>
+                <p className="service-card__desc">{service.description}</p>
               </motion.div>
             ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="about section" id="about">
-        <div className="container">
-          <div className="about__grid">
-            <motion.div 
-              className="about__content"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="section-label">About Me</span>
-              <h2 className="section-title">Passionate about creating digital experiences</h2>
-              <p className="about__text">
-                I'm a developer with a keen eye for design and a passion for building 
-                exceptional digital products. With experience in both frontend and backend 
-                development, I bring ideas to life through clean code and thoughtful user experiences.
-              </p>
-              <p className="about__text">
-                When I'm not coding, you'll find me exploring new technologies, 
-                contributing to open-source projects, or working on personal creative endeavors.
-              </p>
-              <Link to="/contact" className="about__link">
-                <motion.span
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Let's work together
-                  <ArrowUpRight size={18} />
-                </motion.span>
-              </Link>
-            </motion.div>
-
-            <motion.div 
-              className="about__stats"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <div className="stat-card">
-                <span className="stat-card__number">6+</span>
-                <span className="stat-card__label">Projects Completed</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-card__number">2+</span>
-                <span className="stat-card__label">Years Experience</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-card__number">12+</span>
-                <span className="stat-card__label">Technologies</span>
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta section">
+      {/* Featured Projects */}
+      <section className="featured section">
         <div className="container">
-          <motion.div 
-            className="cta__content"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="cta__title">Ready to start a project?</h2>
-            <p className="cta__text">
-              Let's collaborate and create something amazing together.
-            </p>
-            <Link to="/contact" className="cta__button">
-              <motion.span
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Get in Touch
-                <ArrowUpRight size={18} />
-              </motion.span>
+          <div className="section-header-row">
+            <h2 className="section-title">Selected Work</h2>
+            <Link to="/projects" className="link-arrow">
+              View all projects <ArrowRight size={16} />
             </Link>
-          </motion.div>
+          </div>
+
+          <div className="projects-grid">
+            {featuredProjects.map((project, index) => (
+              <ProjectCard key={project.id} project={project} index={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About / Team Section Equivalent */}
+      <section className="about-preview section">
+        <div className="container">
+          <div className="about-preview__card">
+            <div className="about-preview__content">
+              <h2 className="about-preview__title">Let's build something meaningful.</h2>
+              <p className="about-preview__text">
+                I believe in technology's power to solve real problems. Whether it's a 
+                complex web platform or an AI-driven tool, I bring dedication and 
+                technical expertise to every project.
+              </p>
+              <Link to="/contact" className="btn btn-primary">
+                Get in Touch
+              </Link>
+            </div>
+            <div className="about-preview__image">
+               {/* Placeholder for dev image or abstract graphic */}
+               <div className="about-preview__placeholder">
+                  <span>YM</span>
+               </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
