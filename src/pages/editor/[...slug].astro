@@ -1,0 +1,31 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import ExplorerLayout from "../../layouts/ExplorerLayout.astro";
+
+export async function getStaticPaths() {
+    const docs = await getCollection("docs");
+    return docs.map((doc) => ({
+        params: { slug: doc.slug },
+    }));
+}
+
+let { slug } = Astro.params;
+
+if (slug === undefined) {
+    return Astro.redirect("/editor/welcome");
+}
+
+const doc = await getEntry("docs", slug);
+
+if (!doc) {
+    return Astro.redirect("/404");
+}
+---
+
+<ExplorerLayout
+    activePostId={doc.slug}
+    title={doc.data.title}
+    code={doc.body}
+    tabs={doc.data.tabs}
+    viewMode="editor"
+/>

@@ -1,0 +1,161 @@
+---
+import "../blocks.css";
+import "../styles/global.css";
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+}
+
+const {
+    title = "yash ajay magar",
+    description = "yash ajay magar — AI journalist, full-stack developer, and builder of practical AI-driven tools. Based in India.",
+    image = "/og-image.png",
+} = Astro.props;
+
+const siteTitle = title === "yash ajay magar" ? title : `${title} · yash ajay magar`;
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title={siteTitle}
+            href={new URL("rss.xml", Astro.site)}
+        />
+        <!-- Google Fonts: Inter + JetBrains Mono -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <title>{siteTitle}</title>
+        <meta name="description" content={description} />
+        <meta name="author" content="yash ajay magar" />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={new URL(image, Astro.url)} />
+        <meta property="og:site_name" content="yash ajay magar" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content="@yashmag50534849" />
+        <style is:global>
+            :root {
+                --font-body: "Inter", system-ui, -apple-system, sans-serif;
+                --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: var(--font-body);
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            code, pre, kbd {
+                font-family: var(--font-mono);
+            }
+        </style>
+    </head>
+    <script is:inline>
+        (function () {
+            try {
+                // Helper to get cookie
+                function getCookie(name) {
+                    const match = document.cookie.match(
+                        new RegExp("(^| )" + name + "=([^;]+)"),
+                    );
+                    return match ? match[2] : null;
+                }
+
+                const storedTheme = getCookie("theme");
+                const systemTheme = window.matchMedia(
+                    "(prefers-color-scheme: dark)",
+                ).matches
+                    ? "dark"
+                    : "light";
+
+                let effectiveTheme = storedTheme;
+                if (!effectiveTheme || effectiveTheme === "system") {
+                    effectiveTheme = systemTheme;
+                }
+
+                // Apply theme to data-theme attribute
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    effectiveTheme,
+                );
+
+                // Cleanup old classes if they exist
+                document.documentElement.classList.remove(
+                    "light-theme",
+                    "dark",
+                );
+            } catch (e) {
+                console.error("Theme init error", e);
+            }
+        })();
+    </script>
+    <body>
+        <slot />
+        <script>
+            // Client-side script handling third-party initialization for SocialEmbeds
+            const loadPlatformScripts = () => {
+                const activeEmbeds = document.querySelectorAll('.social-embed-container');
+                if (activeEmbeds.length === 0) return;
+
+                const platformsOnPage = new Set(Array.from(activeEmbeds).map(el => el.getAttribute('data-platform')));
+                const win = window as any;
+
+                // Dynamic X (Twitter) Script Injection
+                if (platformsOnPage.has('x') && !win.twttr) {
+                    const script = document.createElement('script');
+                    script.src = "https://platform.twitter.com/widgets.js";
+                    script.async = true;
+                    document.head.appendChild(script);
+                } else if (platformsOnPage.has('x') && win.twttr) {
+                    win.twttr.widgets.load();
+                }
+
+                // Dynamic TikTok Script Injection
+                if (platformsOnPage.has('tiktok') && !document.getElementById('tiktok-wjs')) {
+                    const script = document.createElement('script');
+                    script.id = 'tiktok-wjs';
+                    script.src = "https://www.tiktok.com/embed.js";
+                    script.async = true;
+                    document.head.appendChild(script);
+                } else if (platformsOnPage.has('tiktok') && win.tiktokEmbed) {
+                    win.tiktokEmbed.lib.render();
+                }
+
+                // Dynamic Instagram Script Injection
+                if (platformsOnPage.has('instagram') && !win.instgrm) {
+                    const script = document.createElement('script');
+                    script.src = "https://www.instagram.com/embed.js";
+                    script.async = true;
+                    document.head.appendChild(script);
+                } else if (platformsOnPage.has('instagram') && win.instgrm) {
+                    win.instgrm.Embeds.process();
+                }
+            };
+
+            // Run on initial load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadPlatformScripts);
+            } else {
+                loadPlatformScripts();
+            }
+
+            // Support Astro View Transitions natively
+            document.addEventListener('astro:after-swap', loadPlatformScripts);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import ExplorerLayout from "../layouts/ExplorerLayout.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+    const docs = await getCollection("docs");
+    return docs.map((doc) => ({
+        params: { slug: doc.slug },
+    }));
+}
+
+let { slug } = Astro.params;
+
+if (slug === undefined) {
+    return Astro.redirect("/");
+}
+
+const doc = await getEntry("docs", slug);
+
+if (!doc) {
+    return Astro.redirect("/404");
+}
+
+const { Content } = await doc.render();
+
+let finalTabs = doc.data.tabs ? [...doc.data.tabs] : [];
+
+console.log(Astro.request.url);
+---
+
+<ExplorerLayout
+    activePostId={doc.slug}
+    title={doc.data.title}
+    code={doc.body}
+    tabs={finalTabs}
+    viewMode="preview"
+>
+    <div
+        class="prose max-w-none px-8 py-0 dark:prose-invert [&>:first-child]:mt-0"
+    >
+        <Content />
+    </div>
+</ExplorerLayout>

@@ -1,0 +1,130 @@
+---
+import { Files, Search, Settings, User, Tag, FolderKanban, Video, Mail, FileText } from "lucide-react";
+
+const pathname = Astro.url.pathname;
+
+const topIcons = [
+    { id: "explorer", icon: Files, label: "Explorer", href: "/" },
+    { id: "search", icon: Search, label: "Search", href: "/search" },
+    { id: "tags", icon: Tag, label: "Tags", href: "/tags" },
+    { id: "projects", icon: FolderKanban, label: "Projects", href: "/projects" },
+    { id: "vlogs", icon: Video, label: "Vlogs", href: "/vlogs" },
+];
+
+const isActive = (href: string) => {
+    const sections = ["/settings", "/search", "/tags", "/about", "/projects", "/vlogs", "/resume", "/contact"];
+    if (sections.includes(href)) {
+        return pathname.startsWith(href);
+    }
+    if (href === "/") {
+        return (
+            pathname === "/" || !sections.some((s) => pathname.startsWith(s))
+        );
+    }
+    return pathname.startsWith(href);
+};
+---
+
+<div
+    class="w-12 bg-[var(--bg-activity)] flex flex-col justify-between h-full text-[var(--fg-secondary)] select-none flex-shrink-0 z-40"
+>
+    <div class="flex flex-col pt-1">
+        {
+            topIcons.map((item) => {
+                const active = isActive(item.href);
+                return (
+                    <a
+                        href={item.href}
+                        id={
+                            item.id === "explorer"
+                                ? "explorer-nav-item"
+                                : undefined
+                        }
+                        class={`relative h-12 w-12 flex items-center justify-center cursor-pointer transition-all duration-150 group ${active ? "text-[var(--fg-primary)]" : "hover:text-[var(--fg-primary)]"}`}
+                        title={item.label}
+                        data-active={active}
+                        onclick={
+                            item.id === "explorer"
+                                ? "if (window.innerWidth < 768 && this.dataset.active === 'true') { event.preventDefault(); window.dispatchEvent(new CustomEvent('toggle-explorer')); }"
+                                : undefined
+                        }
+                    >
+                        {/* Active pill indicator */}
+                        {active && (
+                            <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+                        )}
+                        {/* Hover background */}
+                        <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${active ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
+                        <item.icon size={20} strokeWidth={active ? 2 : 1.5} className="relative z-10" />
+                        {/* Tooltip */}
+                        <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+                            {item.label}
+                        </div>
+                    </a>
+                );
+            })
+        }
+    </div>
+    <div class="flex flex-col pb-2">
+        {/* Resume */}
+        <a
+            class={`relative h-12 w-12 flex items-center justify-center cursor-pointer transition-all duration-150 group ${isActive("/resume") ? "text-[var(--fg-primary)]" : "hover:text-[var(--fg-primary)]"}`}
+            title="Resume"
+            href="/resume"
+        >
+            {isActive("/resume") && (
+                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+            )}
+            <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/resume") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
+            <FileText size={20} strokeWidth={isActive("/resume") ? 2 : 1.5} className="relative z-10" />
+            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+                Resume
+            </div>
+        </a>
+        {/* About */}
+        <a
+            class={`relative h-12 w-12 flex items-center justify-center cursor-pointer transition-all duration-150 group ${isActive("/about") ? "text-[var(--fg-primary)]" : "hover:text-[var(--fg-primary)]"}`}
+            title="About Me"
+            href="/about"
+        >
+            {isActive("/about") && (
+                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+            )}
+            <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/about") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
+            <User size={20} strokeWidth={isActive("/about") ? 2 : 1.5} className="relative z-10" />
+            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+                About Me
+            </div>
+        </a>
+        {/* Contact */}
+        <a
+            class={`relative h-12 w-12 flex items-center justify-center cursor-pointer transition-all duration-150 group ${isActive("/contact") ? "text-[var(--fg-primary)]" : "hover:text-[var(--fg-primary)]"}`}
+            title="Contact"
+            href="/contact"
+        >
+            {isActive("/contact") && (
+                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+            )}
+            <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/contact") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
+            <Mail size={20} strokeWidth={isActive("/contact") ? 2 : 1.5} className="relative z-10" />
+            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+                Contact
+            </div>
+        </a>
+        {/* Settings */}
+        <a
+            class={`relative h-12 w-12 flex items-center justify-center cursor-pointer transition-all duration-150 group ${isActive("/settings") ? "text-[var(--fg-primary)]" : "hover:text-[var(--fg-primary)]"}`}
+            title="Settings"
+            href="/settings"
+        >
+            {isActive("/settings") && (
+                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+            )}
+            <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/settings") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
+            <Settings size={20} strokeWidth={isActive("/settings") ? 2 : 1.5} className="relative z-10" />
+            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+                Settings
+            </div>
+        </a>
+    </div>
+</div>

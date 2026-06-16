@@ -1,0 +1,102 @@
+---
+import { FileCode, Eye, X, ExternalLink, Github, Globe, Play } from "lucide-react";
+import Breadcrumbs from "./Breadcrumbs.astro";
+import ViewToggle from "./ViewToggle.astro";
+
+interface Props {
+    slug?: string;
+    title?: string;
+    tabs?: {
+        label: string;
+        href: string;
+    }[];
+}
+
+const { slug, title, tabs } = Astro.props;
+const pathname = Astro.url.pathname;
+const isWelcome = pathname === "/";
+const filename =
+    title ??
+    (isWelcome ? "README.md" : slug?.split("/").pop() + ".md" || "Untitled");
+---
+
+<div
+    class="flex-1 flex flex-col bg-[var(--bg-main)] min-w-0 overflow-hidden h-full"
+>
+    {/* Tab Strip */}
+    <div
+        class="flex bg-[var(--bg-sidebar)] border-b border-[var(--border-main)] overflow-x-auto select-none"
+        style="scrollbar-width: none; -ms-overflow-style: none;"
+    >
+        {/* Active Tab */}
+        <div
+            class="group flex items-center min-w-[140px] max-w-[220px] h-[35px] border-r border-[var(--border-main)] px-3 cursor-default bg-[var(--bg-main)] text-[var(--fg-primary)] relative flex-shrink-0"
+        >
+            {/* Top accent bar — VS Code 2025 style */}
+            <div class="absolute top-0 left-0 right-0 h-[2px] bg-[var(--header-h1)] rounded-b-sm" />
+            <span class="mr-2 text-[#e8ab53]">
+                <FileCode size={13} />
+            </span>
+            <span class="text-[12px] truncate flex-1 font-medium">{filename}</span>
+            {
+                !isWelcome && (
+                    <a
+                        href="/"
+                        class="ml-1.5 p-0.5 rounded hover:bg-[var(--icon-hover-bg)] text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] flex items-center justify-center transition-colors flex-shrink-0"
+                    >
+                        <X size={12} />
+                    </a>
+                )
+            }
+        </div>
+
+        {/* Additional Tabs */}
+        {
+            tabs?.map((tab) => (
+                <a
+                    href={tab.href}
+                    target={tab.href.startsWith("/") ? undefined : "_blank"}
+                    rel={tab.href.startsWith("/") ? undefined : "noopener noreferrer"}
+                    class="group flex items-center min-w-[120px] max-w-[200px] h-[35px] border-r border-[var(--border-main)] px-3 cursor-pointer bg-[var(--tab-inactive-bg)] text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] hover:bg-[var(--hover-bg)] transition-colors no-underline flex-shrink-0"
+                >
+                    <span class="mr-2 opacity-60 flex-shrink-0">
+                        {tab.label.toLowerCase().includes("source") ? (
+                            <Github size={13} />
+                        ) : tab.label.toLowerCase().includes("demo") ||
+                          tab.label.toLowerCase().includes("live") ? (
+                            <Globe size={13} />
+                        ) : tab.label.toLowerCase().includes("player") ||
+                          tab.label.toLowerCase().includes("podcast") ? (
+                            <Play size={13} />
+                        ) : (
+                            <ExternalLink size={13} />
+                        )}
+                    </span>
+                    <span class="text-[12px] truncate flex-1">{tab.label}</span>
+                    {!tab.href.startsWith("/") && (
+                        <span class="ml-1.5 flex items-center justify-center opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0">
+                            <ExternalLink size={11} />
+                        </span>
+                    )}
+                </a>
+            ))
+        }
+    </div>
+
+    {/* Breadcrumbs & Tools */}
+    <div
+        class="h-[26px] bg-[var(--bg-main)] flex items-center justify-between px-4 text-[12px] text-[var(--fg-secondary)] border-b border-[var(--border-main)]/60"
+    >
+        <Breadcrumbs slug={slug} />
+        <div class="flex items-center space-x-2 flex-shrink-0">
+            <ViewToggle />
+        </div>
+    </div>
+
+    {/* Content Area */}
+    <div
+        class="flex-1 relative overflow-auto scroll-smooth bg-[var(--bg-main)]"
+    >
+        <slot />
+    </div>
+</div>
