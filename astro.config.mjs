@@ -3,8 +3,6 @@ import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
 
-import node from '@astrojs/node';
-
 import tailwindcss from '@tailwindcss/vite';
 
 import mdx from "@astrojs/mdx";
@@ -132,10 +130,7 @@ export default defineConfig({
     rehypePlugins: [rehypeSocialEmbed]
   },
 
-  output: 'server',
-  adapter: node({
-    mode: 'standalone'
-  }),
+  output: 'static',
 
   vite: {
     plugins: [tailwindcss()],
