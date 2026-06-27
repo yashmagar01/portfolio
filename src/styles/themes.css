@@ -1,113 +1,143 @@
 @layer base {
     :root {
-        /* Base Colors (Default to Dark/System) */
-        --bg-main: #1e1e1e;
-        --bg-sidebar: #252526;
-        --bg-activity: #333333;
-        --bg-titlebar: #3c3c3c;
-        --bg-status: #007acc;
+        /* Base Colors (Default to Light/Vercel) */
+        --bg-main: #fafafa;
+        --bg-sidebar: #ffffff;
+        --bg-activity: #fafafa;
+        --bg-titlebar: #fafafa;
+        --bg-status: #171717;
 
-        --fg-primary: #cccccc;
-        --fg-secondary: #858585;
+        --fg-primary: #171717;
+        --fg-secondary: #4d4d4d;
+        --fg-mute: #8f8f8f;
+        --fg-faint: #a1a1a1;
 
-        --border-main: #2b2b2b;
-        --border-secondary: #3c3c3c;
+        --border-main: #ebebeb;
+        --border-secondary: #ebebeb;
 
-        --hover-bg: #2a2d2e;
-        --selection-bg: #37373d;
-        --tab-inactive-bg: #2d2d2d;
+        --hover-bg: #f2f2f2;
+        --selection-bg: #f2f2f2;
+        --tab-inactive-bg: #fafafa;
 
-        --input-bg: #3c3c3c;
-        --input-fg: #ffffff;
+        --input-bg: #ffffff;
+        --input-fg: #171717;
 
         /* VS Code 2025 Design Tokens */
-        --panel-shadow: 0 4px 16px rgba(0,0,0,0.32), 0 1px 3px rgba(0,0,0,0.24);
-        --tab-border-radius: 4px;
-        --icon-folder: #e8ab53;
-        --icon-md: #519aba;
-        --icon-ts: #519aba;
-        --icon-json: #e8ab53;
-        --icon-default: #cccccc;
-        --icon-hover-bg: rgba(255,255,255,0.08);
+        --panel-shadow: 0px 1px 1px rgba(0,0,0,0.04);
+        --tab-border-radius: 6px;
+        --icon-folder: #8f8f8f;
+        --icon-md: #8f8f8f;
+        --icon-ts: #8f8f8f;
+        --icon-json: #8f8f8f;
+        --icon-default: #8f8f8f;
+        --icon-hover-bg: rgba(0,0,0,0.04);
 
-        /* Syntax Highlighting (Dark Plus) */
-        --token-comment: #6a9955;
-        --token-punctuation: #d4d4d4;
-        --token-property: #b5cea8;
-        --token-selector: #ce9178;
-        --token-operator: #d4d4d4;
-        --token-keyword: #569cd6;
-        --token-function: #dcdcaa;
-        --token-regex: #d16969;
-        --token-class-name: #4ec9b0;
-        --token-variable: #9cdcfe;
-        --token-boolean: #569cd6;
-        --token-number: #b5cea8;
-        --token-string: #ce9178;
-        --token-tag: #569cd6;
-        --token-attr-name: #9cdcfe;
-        --token-attr-name: #9cdcfe;
-        --token-attr-value: #ce9178;
+        /* Accent & Brand */
+        --color-link: #0070f3;
+        --color-link-deep: #0761d1;
+        --gradient-hero: linear-gradient(
+            135deg,
+            #007cf0 0%, #00dfd8 20%, #7928ca 40%,
+            #ff0080 60%, #ff4d4d 80%, #f9cb28 100%
+        );
+
+        /* Syntax Highlighting (Light) */
+        --token-comment: #8f8f8f;
+        --token-punctuation: #171717;
+        --token-property: #0070f3;
+        --token-selector: #7928ca;
+        --token-operator: #171717;
+        --token-keyword: #7928ca;
+        --token-function: #0070f3;
+        --token-regex: #eb367f;
+        --token-class-name: #0070f3;
+        --token-variable: #171717;
+        --token-boolean: #7928ca;
+        --token-number: #0070f3;
+        --token-string: #067a6e;
+        --token-tag: #7928ca;
+        --token-attr-name: #0070f3;
+        --token-attr-value: #067a6e;
 
         /* Header Colors */
-        --header-h1: #569cd6;
-        --header-h2: #dcdcaa;
-        --header-h3: #4ec9b0;
+        --header-h1: #171717;
+        --header-h2: #171717;
+        --header-h3: #4d4d4d;
     }
 
     [data-theme="light"] {
-        --bg-main: #ffffff;
-        --bg-sidebar: #f3f3f3;
-        --bg-activity: #e8e8e8;
-        --bg-titlebar: #dddddd;
-        --bg-status: #007acc;
-        --panel-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.08);
-        --tab-border-radius: 4px;
-        --icon-folder: #d9a441;
-        --icon-md: #519aba;
-        --icon-ts: #519aba;
-        --icon-json: #d9a441;
-        --icon-default: #555555;
-        --icon-hover-bg: rgba(0,0,0,0.06);
+        /* === VERCEL GEIST DESIGN SYSTEM === */
+        /* Surface */
+        --bg-main: #fafafa;                  /* canvas — the near-white sheet */
+        --bg-sidebar: #ffffff;               /* canvas-elevated — pure white panels */
+        --bg-activity: #fafafa;              /* same as canvas */
+        --bg-titlebar: #fafafa;
+        --bg-status: #171717;                /* ink — Vercel-dark status bar */
 
-        --fg-primary: #333333;
-        --fg-secondary: #6e6e6e;
+        /* Elevation */
+        --panel-shadow: 0px 1px 1px rgba(0,0,0,0.04);  /* whisper shadow */
+        --tab-border-radius: 6px;
 
-        --border-main: #e5e5e5;
-        --border-secondary: #e5e5e5;
+        /* Icons — muted in light mode */
+        --icon-folder: #8f8f8f;
+        --icon-md: #8f8f8f;
+        --icon-ts: #8f8f8f;
+        --icon-json: #8f8f8f;
+        --icon-default: #8f8f8f;
+        --icon-hover-bg: rgba(0,0,0,0.04);
 
-        --hover-bg: #e8e8e8;
-        --selection-bg: #e4e6f1;
-        --tab-inactive-bg: #ececec;
+        /* Text Ladder */
+        --fg-primary: #171717;               /* ink — headings, primary text */
+        --fg-secondary: #4d4d4d;             /* body — paragraphs, nav links */
+        --fg-mute: #8f8f8f;                  /* mute — captions, metadata */
+        --fg-faint: #a1a1a1;                 /* faint — placeholders, disabled */
 
+        /* Borders */
+        --border-main: #ebebeb;              /* hairline — the 1px structural workhorse */
+        --border-secondary: #ebebeb;
+
+        /* Interactive States */
+        --hover-bg: #f2f2f2;                 /* hairline-soft surface */
+        --selection-bg: #f2f2f2;
+        --tab-inactive-bg: #fafafa;
+
+        /* Inputs */
         --input-bg: #ffffff;
-        --input-fg: #333333;
+        --input-fg: #171717;
 
-        /* Syntax Highlighting (Light Plus) */
-        --token-comment: #008000;
-        --token-punctuation: #393A34;
-        --token-property: #800000;
-        /* Maroon group */
-        --token-selector: #800000;
-        --token-operator: #393A34;
-        --token-keyword: #0000ff;
-        --token-function: #393A34;
-        /* Often plain in light theme or different */
-        --token-regex: #ff0000;
-        --token-class-name: #2B91AF;
-        --token-variable: #36acaa;
-        /* Teal group */
-        --token-boolean: #0000ff;
-        --token-number: #36acaa;
-        --token-string: #A31515;
-        --token-tag: #800000;
-        --token-attr-name: #ff0000;
-        --token-attr-name: #ff0000;
-        --token-attr-value: #0000ff;
+        /* Accent */
+        --color-link: #0070f3;               /* Vercel blue — links, focus */
+        --color-link-deep: #0761d1;          /* pressed state */
 
-        --header-h1: #098658;
-        --header-h2: #795e26;
-        --header-h3: #0000ff;
+        /* Brand Gradient */
+        --gradient-hero: linear-gradient(
+            135deg,
+            #007cf0 0%, #00dfd8 20%, #7928ca 40%,
+            #ff0080 60%, #ff4d4d 80%, #f9cb28 100%
+        );
+
+        /* Syntax Highlighting — Vercel-aligned light */
+        --token-comment: #8f8f8f;
+        --token-punctuation: #171717;
+        --token-property: #0070f3;
+        --token-selector: #7928ca;
+        --token-operator: #171717;
+        --token-keyword: #7928ca;
+        --token-function: #0070f3;
+        --token-regex: #eb367f;
+        --token-class-name: #0070f3;
+        --token-variable: #171717;
+        --token-boolean: #7928ca;
+        --token-number: #0070f3;
+        --token-string: #067a6e;
+        --token-tag: #7928ca;
+        --token-attr-name: #0070f3;
+        --token-attr-value: #067a6e;
+
+        /* Headings — monochrome ink, no syntax color */
+        --header-h1: #171717;
+        --header-h2: #171717;
+        --header-h3: #4d4d4d;
     }
 
     [data-theme="dark"] {
@@ -490,41 +520,58 @@
 
     @media (prefers-color-scheme: light) {
         [data-theme="system"] {
-            /* Copy of Light Theme */
-            --bg-main: #ffffff;
-            --bg-sidebar: #f3f3f3;
-            --bg-activity: #e8e8e8;
-            --bg-status: #007acc;
-            --fg-primary: #333333;
-            --fg-secondary: #6e6e6e;
-            --border-main: #e5e5e5;
-            --border-secondary: #e5e5e5;
-            --hover-bg: #e8e8e8;
-            --selection-bg: #e4e6f1;
-            --tab-inactive-bg: #ececec;
+            /* === Mirrors [data-theme="light"] — Vercel Geist === */
+            --bg-main: #fafafa;
+            --bg-sidebar: #ffffff;
+            --bg-activity: #fafafa;
+            --bg-titlebar: #fafafa;
+            --bg-status: #171717;
+            --panel-shadow: 0px 1px 1px rgba(0,0,0,0.04);
+            --tab-border-radius: 6px;
+            --icon-folder: #8f8f8f;
+            --icon-md: #8f8f8f;
+            --icon-ts: #8f8f8f;
+            --icon-json: #8f8f8f;
+            --icon-default: #8f8f8f;
+            --icon-hover-bg: rgba(0,0,0,0.04);
+            --fg-primary: #171717;
+            --fg-secondary: #4d4d4d;
+            --fg-mute: #8f8f8f;
+            --fg-faint: #a1a1a1;
+            --border-main: #ebebeb;
+            --border-secondary: #ebebeb;
+            --hover-bg: #f2f2f2;
+            --selection-bg: #f2f2f2;
+            --tab-inactive-bg: #fafafa;
             --input-bg: #ffffff;
-            --input-fg: #333333;
-            --token-comment: #008000;
-            --token-punctuation: #393A34;
-            --token-property: #800000;
-            --token-selector: #800000;
-            --token-operator: #393A34;
-            --token-keyword: #0000ff;
-            --token-function: #393A34;
-            --token-regex: #ff0000;
-            --token-class-name: #2B91AF;
-            --token-variable: #36acaa;
-            --token-boolean: #0000ff;
-            --token-number: #36acaa;
-            --token-string: #A31515;
-            --token-tag: #800000;
-            --token-attr-name: #ff0000;
-            --token-attr-name: #ff0000;
-            --token-attr-value: #0000ff;
+            --input-fg: #171717;
+            --color-link: #0070f3;
+            --color-link-deep: #0761d1;
+            --gradient-hero: linear-gradient(
+                135deg,
+                #007cf0 0%, #00dfd8 20%, #7928ca 40%,
+                #ff0080 60%, #ff4d4d 80%, #f9cb28 100%
+            );
+            --token-comment: #8f8f8f;
+            --token-punctuation: #171717;
+            --token-property: #0070f3;
+            --token-selector: #7928ca;
+            --token-operator: #171717;
+            --token-keyword: #7928ca;
+            --token-function: #0070f3;
+            --token-regex: #eb367f;
+            --token-class-name: #0070f3;
+            --token-variable: #171717;
+            --token-boolean: #7928ca;
+            --token-number: #0070f3;
+            --token-string: #067a6e;
+            --token-tag: #7928ca;
+            --token-attr-name: #0070f3;
+            --token-attr-value: #067a6e;
 
-            --header-h1: #098658;
-            --header-h2: #795e26;
-            --header-h3: #0000ff;
+            --header-h1: #171717;
+            --header-h2: #171717;
+            --header-h3: #4d4d4d;
         }
     }
 

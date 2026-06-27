@@ -53,7 +53,7 @@ const posts = docs.filter((doc) => (doc.data.tags || []).includes(tag));
             {
                 posts.map((post) => (
                     <a
-                        href={`/${post.slug}`}
+                        href={`/${post.id}`}
                         class="block p-6 rounded-lg border border-[var(--border-main)] hover:border-[var(--accent)] bg-[var(--bg-sidebar)] hover:bg-[var(--hover-bg)] transition-all group no-underline"
                     >
                         <h2 class="text-xl font-bold mb-2 text-[var(--fg-primary)] group-hover:text-[var(--accent)] transition-colors">

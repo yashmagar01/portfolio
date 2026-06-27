@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /vlogs/
+
+Sitemap: https://www.magar.xyz/sitemap-index.xml

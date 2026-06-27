@@ -51,13 +51,13 @@ const isActive = (href: string) => {
                     >
                         {/* Active pill indicator */}
                         {active && (
-                            <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+                            <div class="absolute left-0 top-2 bottom-2 w-[2px] bg-[var(--fg-primary)] rounded-r-full" />
                         )}
                         {/* Hover background */}
                         <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${active ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
                         <item.icon size={20} strokeWidth={active ? 2 : 1.5} className="relative z-10" />
                         {/* Tooltip */}
-                        <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+                        <div class="absolute left-full ml-2 px-2.5 py-1.5 bg-[var(--bg-sidebar)] border border-[var(--border-main)] rounded-md text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50">
                             {item.label}
                         </div>
                     </a>
@@ -73,11 +73,11 @@ const isActive = (href: string) => {
             href="/resume"
         >
             {isActive("/resume") && (
-                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+                <div class="absolute left-0 top-2 bottom-2 w-[2px] bg-[var(--fg-primary)] rounded-r-full" />
             )}
             <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/resume") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
             <FileText size={20} strokeWidth={isActive("/resume") ? 2 : 1.5} className="relative z-10" />
-            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+            <div class="absolute left-full ml-2 px-2.5 py-1.5 bg-[var(--bg-sidebar)] border border-[var(--border-main)] rounded-md text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50">
                 Resume
             </div>
         </a>
@@ -88,11 +88,11 @@ const isActive = (href: string) => {
             href="/about"
         >
             {isActive("/about") && (
-                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+                <div class="absolute left-0 top-2 bottom-2 w-[2px] bg-[var(--fg-primary)] rounded-r-full" />
             )}
             <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/about") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
             <User size={20} strokeWidth={isActive("/about") ? 2 : 1.5} className="relative z-10" />
-            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+            <div class="absolute left-full ml-2 px-2.5 py-1.5 bg-[var(--bg-sidebar)] border border-[var(--border-main)] rounded-md text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50">
                 About Me
             </div>
         </a>
@@ -103,11 +103,11 @@ const isActive = (href: string) => {
             href="/contact"
         >
             {isActive("/contact") && (
-                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+                <div class="absolute left-0 top-2 bottom-2 w-[2px] bg-[var(--fg-primary)] rounded-r-full" />
             )}
             <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/contact") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
             <Mail size={20} strokeWidth={isActive("/contact") ? 2 : 1.5} className="relative z-10" />
-            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+            <div class="absolute left-full ml-2 px-2.5 py-1.5 bg-[var(--bg-sidebar)] border border-[var(--border-main)] rounded-md text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50">
                 Contact
             </div>
         </a>
@@ -118,11 +118,11 @@ const isActive = (href: string) => {
             href="/settings"
         >
             {isActive("/settings") && (
-                <div class="absolute left-0 top-2 bottom-2 w-[3px] bg-[var(--header-h1)] rounded-r-full" />
+                <div class="absolute left-0 top-2 bottom-2 w-[2px] bg-[var(--fg-primary)] rounded-r-full" />
             )}
             <div class={`absolute inset-[6px] rounded-lg transition-all duration-150 ${isActive("/settings") ? "bg-[var(--hover-bg)]" : "opacity-0 group-hover:opacity-100 bg-[var(--hover-bg)]"}`} />
             <Settings size={20} strokeWidth={isActive("/settings") ? 2 : 1.5} className="relative z-10" />
-            <div class="absolute left-full ml-2 px-2 py-1 bg-[var(--bg-main)] border border-[var(--border-main)] rounded text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-lg">
+            <div class="absolute left-full ml-2 px-2.5 py-1.5 bg-[var(--bg-sidebar)] border border-[var(--border-main)] rounded-md text-xs text-[var(--fg-primary)] whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50">
                 Settings
             </div>
         </a>

@@ -4,8 +4,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-body: "Inter", system-ui, -apple-system, sans-serif;
-  --font-code: "JetBrains Mono", "Fira Code", monospace;
+  --font-body: "Geist", "Inter", system-ui, -apple-system, sans-serif;
+  --font-code: "Geist Mono", "JetBrains Mono", "Fira Code", monospace;
 
   --color-bg-main: #1e1e1e;
   --color-bg-sidebar: #252526;
@@ -79,7 +79,7 @@ body {
 }
 
 .prose a {
-  color: #3794ff;
+  color: var(--color-link, #3794ff);
   text-decoration: none;
 }
 
@@ -89,19 +89,21 @@ body {
 
 .prose code {
   color: var(--token-string);
-  /* background-color: var(--hover-bg); */
+  background-color: var(--hover-bg);
   padding: 0.2em 0.4em;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: normal;
+  font-size: 0.9em;
+  border: 1px solid var(--border-main);
 }
 
 .prose pre {
-  /* background-color: var(--bg-main); */
-  border: 1px solid var(--border-secondary);
+  border: 1px solid var(--border-main);
+  border-radius: 12px;
 }
 
 .prose blockquote {
-  border-left-color: #007acc;
+  border-left: 3px solid var(--border-main);
   color: var(--fg-secondary);
   font-style: italic;
 }
@@ -176,14 +178,14 @@ body {
   scrollbar-width: none;
 }
 
-/* Card utility with floating panel shadow */
+/* Card utility — hairline-bordered, whisper shadow */
 .card {
   background: var(--bg-sidebar);
   border: 1px solid var(--border-main);
   border-radius: 12px;
-  box-shadow: var(--panel-shadow);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.04);
+  transition: border-color 0.2s ease;
 }
 .card:hover {
-  box-shadow: var(--panel-shadow), 0 0 0 1px var(--border-secondary);
+  border-color: var(--fg-secondary);
 }

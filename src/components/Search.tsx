@@ -35,7 +35,7 @@ const Search: React.FC = () => {
         return posts.filter(post =>
             post.title.toLowerCase().includes(lowerQuery) ||
             (post.summary?.toLowerCase().includes(lowerQuery)) ||
-            (post.slug.toLowerCase().includes(lowerQuery))
+            (post.id.toLowerCase().includes(lowerQuery))
         );
     }, [searchQuery, posts]);
 
@@ -57,8 +57,8 @@ const Search: React.FC = () => {
 
                 {!loading && filteredPosts.map(post => (
                     <a
-                        key={post.id || post.slug}
-                        href={post.slug === 'welcome' ? '/' : `/${post.slug}`}
+                        key={post.id}
+                        href={post.id === 'welcome' ? '/' : `/${post.id}`}
                         className="block cursor-pointer hover:bg-[var(--hover-bg)] px-4 py-2 group no-underline"
                     >
                         <div className="text-sm text-[var(--fg-primary)] font-medium truncate flex items-center">
@@ -68,7 +68,7 @@ const Search: React.FC = () => {
                             {post.summary ? (
                                 <span className="line-clamp-2">{post.summary}</span>
                             ) : (
-                                <span className="font-mono">{post.slug}</span>
+                                <span className="font-mono">{post.id}</span>
                             )}
                         </div>
                     </a>

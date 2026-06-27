@@ -16,7 +16,7 @@ const { title, activeTag } = Astro.props;
 const docs = await getCollection("docs");
 const tagCounts: Record<string, number> = {};
 docs.forEach((doc) => {
-    (doc.data.tags || []).forEach((tag) => {
+    (doc.data.tags || []).forEach((tag: string) => {
         tagCounts[tag] = (tagCounts[tag] || 0) + 1;
     });
 });

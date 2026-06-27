@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "./Layout.astro";
 import TitleBar from "../components/TitleBar.astro";
 import ActivityBar from "../components/ActivityBar.astro";
@@ -37,10 +37,10 @@ const {
 const docs = await getCollection("docs");
 
 // Find active post to get its outline if needed
-const activeDoc = docs.find((d) => d.slug === activePostId);
+const activeDoc = docs.find((d) => d.id === activePostId);
 let activeOutline: { id: string; label: string; level: number }[] = [];
 if (activeDoc) {
-    const { headings } = await activeDoc.render();
+    const { headings } = await render(activeDoc);
     activeOutline = headings.map((h) => ({
         id: h.slug,
         label: h.text,
@@ -52,11 +52,11 @@ const relatedPosts = ((activeDoc?.data as any)?.related || [])
     .map((relatedPath: string) => {
         const cleanSlug = relatedPath.replace(/\.mdx?$/, "");
         const foundDoc = docs.find(
-            (d) => d.slug === cleanSlug || d.id === relatedPath,
+            (d) => d.id === cleanSlug || d.id === relatedPath,
         );
         if (!foundDoc) return null;
         return {
-            id: foundDoc.slug,
+            id: foundDoc.id,
             title: foundDoc.data.title,
         };
     })

@@ -7,9 +7,10 @@ export const GET: APIRoute = async () => {
     const docs = await getCollection("docs");
 
     const searchIndex = docs.map((doc) => ({
+        id: doc.id,
         title: doc.data.title,
         date: doc.data.date,
-        slug: doc.slug,
+        slug: doc.id,
         summary: doc.data.summary,
     }));
 

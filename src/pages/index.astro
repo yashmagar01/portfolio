@@ -2,39 +2,25 @@
 import ExplorerLayout from "../layouts/ExplorerLayout.astro";
 import { getCollection, getEntry } from "astro:content";
 import {
-    Github,
-    Youtube,
-    Twitter,
-    Linkedin,
-    Globe,
-    Mail,
-    BookOpen,
+    ArrowUpRight,
     Play,
     Calendar,
-    ArrowUpRight,
-    Tag
+    Rss,
 } from "lucide-react";
-
-// Fetch the welcome doc
-const welcomeDoc = await getEntry("docs", "welcome");
-if (!welcomeDoc) {
-    throw new Error("Welcome doc not found");
-}
-const { Content } = await welcomeDoc.render();
 
 // Fetch all docs for computing posts, tags, videos, and table of contents
 const allDocs = await getCollection("docs");
 
 // Exclude standalone files from blog posts list
 const blogPosts = allDocs.filter(
-    (doc) => doc.slug !== "welcome" && doc.slug !== "about" && doc.slug !== "privacy" && doc.slug !== "resume" && doc.slug !== "contact" && !doc.slug.startsWith("projects") && !doc.slug.startsWith("vlogs")
+    (doc) => doc.id !== "welcome" && doc.id !== "about" && doc.id !== "privacy" && doc.id !== "resume" && doc.id !== "contact" && !doc.id.startsWith("projects") && !doc.id.startsWith("vlogs")
 );
 
 // 1. Tags section: all tags as chips with counts
 const tagCounts: Record<string, number> = {};
 blogPosts.forEach((post) => {
     const tags = post.data.tags || [];
-    tags.forEach((tag) => {
+    tags.forEach((tag: string) => {
         const cleaned = tag.trim().toLowerCase();
         if (cleaned) {
             tagCounts[cleaned] = (tagCounts[cleaned] || 0) + 1;
@@ -44,21 +30,20 @@ blogPosts.forEach((post) => {
 const sortedTags = Object.entries(tagCounts)
     .sort((a, b) => b[1] - a[1]);
 
-// 2. Recent Posts: top 5 recent posts, excluding videos
+// 2. Recent Posts: top 6 recent posts, excluding videos
 const recentPosts = blogPosts
-    .filter((post) => !(post.data.tags || []).map(t => t.toLowerCase()).includes("video"))
+    .filter((post) => !(post.data.tags || []).map((t: string) => t.toLowerCase()).includes("video"))
     .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-    .slice(0, 5);
+    .slice(0, 6);
 
-// 3. Recent Videos: top 5 posts with video tag, showing YouTube thumbnails
+// 3. Recent Videos: top 4 posts with video tag, showing YouTube thumbnails
 const videoPosts = blogPosts
-    .filter((post) => (post.data.tags || []).map(t => t.toLowerCase()).includes("video"))
+    .filter((post) => (post.data.tags || []).map((t: string) => t.toLowerCase()).includes("video"))
     .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-    .slice(0, 5);
+    .slice(0, 4);
 
 // Helper to extract YouTube video ID from post body
 function getYoutubeId(content: string): string | null {
-    // Check for SocialEmbed component first
     const socialMatch = content.match(/<SocialEmbed[^>]*id=["']([a-zA-Z0-9_-]+)["']/);
     if (socialMatch && content.includes('platform="youtube"')) {
         return socialMatch[1];
@@ -73,7 +58,7 @@ function getYoutubeId(content: string): string | null {
 }
 
 const recentVideosWithMetadata = videoPosts.map((post) => {
-    const ytId = getYoutubeId(post.body);
+    const ytId = getYoutubeId(post.body || "");
     const thumbnail = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
     return {
         ...post,
@@ -82,7 +67,7 @@ const recentVideosWithMetadata = videoPosts.map((post) => {
     };
 });
 
-// 3.5. Content Graph: calculate posts per day for the last 53 weeks
+// 4. Content Graph: calculate posts per day for the last 53 weeks
 const postsPerDay: Record<string, number> = {};
 blogPosts.forEach((post) => {
     if (post.data.date) {
@@ -95,8 +80,8 @@ const postDates = blogPosts
     .map(p => p.data.date ? new Date(p.data.date) : null)
     .filter((d): d is Date => d !== null);
 
-const latestPostDate = postDates.length > 0 
-    ? new Date(Math.max(...postDates.map(d => d.getTime()))) 
+const latestPostDate = postDates.length > 0
+    ? new Date(Math.max(...postDates.map(d => d.getTime())))
     : new Date();
 
 const today = new Date();
@@ -104,10 +89,10 @@ const baseDate = latestPostDate > today ? latestPostDate : today;
 
 const currentDayOfWeek = baseDate.getDay();
 const endDate = new Date(baseDate);
-endDate.setDate(baseDate.getDate() + (6 - currentDayOfWeek)); // Round up to Saturday of current week
+endDate.setDate(baseDate.getDate() + (6 - currentDayOfWeek));
 
 const startDate = new Date(endDate);
-startDate.setDate(endDate.getDate() - 370); // 371 days (53 weeks * 7 days)
+startDate.setDate(endDate.getDate() - 370);
 
 const daysArray: { dateStr: string; count: number; date: Date }[] = [];
 const tempDate = new Date(startDate);
@@ -136,27 +121,19 @@ for (let i = 0; i < daysArray.length; i += 7) {
     let label: string | null = null;
     const firstDay = weekDays[0].date;
     const month = firstDay.getMonth();
-    
+
     if (month !== lastMonth) {
         label = firstDay.toLocaleDateString(undefined, { month: 'short' });
         lastMonth = month;
     }
-    
+
     weeks.push({
         days: weekDays,
         monthLabel: label
     });
 }
 
-// 4. Social Links mapping with custom hover theme accent colors and icons
-const socialLinks = [
-    { name: "Github", href: "https://github.com/yashmagar01", icon: Github, color: "hover:border-[var(--fg-primary)] hover:text-[var(--fg-primary)]" },
-    { name: "LinkedIn", href: "https://www.linkedin.com/in/yash-magar/", icon: Linkedin, color: "hover:border-blue-500 hover:text-blue-500" },
-    { name: "YouTube", href: "https://www.youtube.com/@yashmagar01", icon: Youtube, color: "hover:border-red-500 hover:text-red-500" },
-    { name: "Twitter/X", href: "https://x.com/yashmag50534849", icon: Twitter, color: "hover:border-sky-400 hover:text-sky-400" },
-    { name: "Email", href: "mailto:yashajaymagar10@gmail.com", icon: Mail, color: "hover:border-emerald-500 hover:text-emerald-500" },
-];
-
+// 5. Posts tree (for the archive section)
 interface TreeNode {
     name: string;
     posts: typeof blogPosts;
@@ -184,7 +161,7 @@ function formatHeaderName(name: string): string {
 }
 
 blogPosts.forEach((post) => {
-    const segments = post.slug.split("/");
+    const segments = post.id.split("/");
     let currentLevel = postsTree;
 
     for (let i = 0; i < segments.length - 1; i++) {
@@ -206,323 +183,851 @@ blogPosts.forEach((post) => {
 function renderTreeHtml(nodeMap: Record<string, TreeNode>, depth = 0): string {
     let html = "";
     const sortedKeys = Object.keys(nodeMap).sort((a, b) => a.localeCompare(b));
-    
+
     for (const key of sortedKeys) {
         const node = nodeMap[key];
         const headingLevel = 3 + depth;
-        
+
         let headingClass = "";
         if (headingLevel === 3) {
-            headingClass = "text-lg font-bold mt-6 mb-3 text-[var(--fg-primary)] flex items-center gap-2 border-b border-[var(--border-main)]/60 pb-1.5";
+            headingClass = "editorial-archive-h3";
         } else if (headingLevel === 4) {
-            headingClass = "text-base font-bold mt-4 mb-2 text-[var(--header-h2)]";
+            headingClass = "editorial-archive-h4";
         } else {
-            headingClass = "text-sm font-semibold mt-3 mb-1 text-[var(--header-h3)]";
+            headingClass = "editorial-archive-h5";
         }
-            
+
         html += `<h${headingLevel} class="${headingClass}">${node.name}</h${headingLevel}>`;
-        
+
         if (node.posts.length > 0) {
-            html += `<ul class="list-none pl-0 space-y-1.5 mb-4">`;
+            html += `<ul class="editorial-archive-list">`;
             const sortedPosts = [...node.posts].sort((a, b) => (a.data.title || "").localeCompare(b.data.title || ""));
             for (const post of sortedPosts) {
                 html += `
-                    <li class="flex items-center gap-2">
-                        <span class="text-[var(--fg-secondary)] text-xs">📄</span>
-                        <a 
-                            href="/${post.slug}" 
-                            class="text-sm text-[var(--fg-primary)] hover:text-[var(--header-h1)] hover:underline transition-colors no-underline"
-                        >
-                            ${post.data.title || post.slug}
+                    <li class="editorial-archive-item">
+                        <a href="/${post.id}" class="editorial-archive-link">
+                            ${post.data.title || post.id}
                         </a>
                     </li>
                 `;
             }
             html += `</ul>`;
         }
-        
+
         if (Object.keys(node.children).length > 0) {
-            html += `<div class="pl-4 border-l border-[var(--border-main)]/40 my-3">`;
+            html += `<div class="editorial-archive-nested">`;
             html += renderTreeHtml(node.children, depth + 1);
             html += `</div>`;
         }
     }
-    
+
     return html;
 }
 
+// Social links — minimal
+const socialLinks = [
+    { name: "GitHub", href: "https://github.com/yashmagar01" },
+    { name: "LinkedIn", href: "https://www.linkedin.com/in/yash-magar/" },
+    { name: "YouTube", href: "https://www.youtube.com/@yashmagar01" },
+    { name: "X", href: "https://x.com/yashmag50534849" },
+    { name: "Email", href: "mailto:yashajaymagar10@gmail.com" },
+];
+
+// Format date helper
+function formatDate(date: string | Date): string {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
 ---
 
 <ExplorerLayout activePostId="welcome">
-    <div class="px-8 py-6 max-w-7xl mx-auto space-y-12">
+    <div class="editorial-root">
 
-        <!-- 1. Custom Reconstructed Hero Content from modernized welcome.md -->
-        <div class="prose max-w-none dark:prose-invert">
-            <Content />
-        </div>
+        {/* ===== HERO BAND ===== */}
+        <section class="editorial-hero">
+            <div class="editorial-hero-gradient" aria-hidden="true"></div>
+            <div class="editorial-hero-content">
+                <span class="editorial-eyebrow">PERSONAL PUBLISHING</span>
+                <h1 class="editorial-display">yash ajay magar</h1>
+                <p class="editorial-lead">
+                    Essays, research notes, technical opinions, and projects —
+                    exploring AI, web development, and the future of tools.
+                </p>
+                <div class="editorial-hero-actions">
+                    <a href="/about" class="editorial-btn-primary">About</a>
+                    <a href="/rss.xml" class="editorial-btn-secondary">
+                        <Rss size={14} />
+                        RSS Feed
+                    </a>
+                </div>
+            </div>
+        </section>
 
-        <!-- 3. Stacking main content sections cleanly -->
-        <div class="space-y-16">
+        {/* ===== RECENT WRITING ===== */}
+        <section class="editorial-section">
+            <div class="editorial-section-header">
+                <span class="editorial-eyebrow">RECENT WRITING</span>
+                <a href="/tags" class="editorial-section-link">
+                    View all →
+                </a>
+            </div>
 
-            <!-- Connect Section -->
-            <div>
-                <div class="flex items-center justify-between mb-6 pb-2 border-b border-[var(--border-main)]">
-                    <h2 class="text-2xl font-bold text-[var(--fg-primary)] flex items-center gap-2">
-                        <Globe className="text-[var(--header-h1)]" size={24} />
-                        Connect
-                    </h2>
-                    <span class="text-xs text-[var(--fg-secondary)] bg-[var(--bg-sidebar)] px-3 py-1 rounded-full border border-[var(--border-main)]">
-                        {socialLinks.length} channels
-                    </span>
+            <div class="editorial-posts-grid">
+                {recentPosts.map((post) => (
+                    <a
+                        href={`/${post.id}`}
+                        class="editorial-post-card"
+                    >
+                        <div class="editorial-post-card-inner">
+                            <div class="editorial-post-meta">
+                                <time>{formatDate(post.data.date)}</time>
+                                {post.data.tags && post.data.tags.slice(0, 2).map((tag: string) => (
+                                    <span class="editorial-tag-inline">{tag}</span>
+                                ))}
+                            </div>
+                            <h3 class="editorial-post-title">
+                                {post.data.title}
+                            </h3>
+                            {post.data.summary && (
+                                <p class="editorial-post-summary">
+                                    {post.data.summary}
+                                </p>
+                            )}
+                        </div>
+                        <ArrowUpRight size={16} className="editorial-post-arrow" />
+                    </a>
+                ))}
+            </div>
+        </section>
+
+        {/* ===== VIDEOS ===== */}
+        {recentVideosWithMetadata.length > 0 && (
+            <section class="editorial-section">
+                <div class="editorial-section-header">
+                    <span class="editorial-eyebrow">VIDEOS</span>
+                    <span class="editorial-section-count">{videoPosts.length} videos</span>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                    {socialLinks.map((social) => (
+                <div class="editorial-videos-grid">
+                    {recentVideosWithMetadata.map((video) => (
                         <a
-                            href={social.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-[var(--bg-sidebar)] hover:bg-[var(--hover-bg)] border border-[var(--border-main)] ${social.color} text-xs text-[var(--fg-primary)] font-semibold transition-all duration-200 group no-underline`}
+                            href={`/${video.id}`}
+                            class="editorial-video-card"
                         >
-                            <social.icon size={14} className="shrink-0 transition-transform group-hover:scale-110" />
-                            <span class="truncate">{social.name}</span>
+                            <div class="editorial-video-thumb">
+                                {video.thumbnail ? (
+                                    <img
+                                        src={video.thumbnail}
+                                        alt={video.data.title}
+                                        loading="lazy"
+                                    />
+                                ) : (
+                                    <div class="editorial-video-placeholder">
+                                        <Play size={32} />
+                                    </div>
+                                )}
+                                <div class="editorial-video-overlay">
+                                    <div class="editorial-play-btn">
+                                        <Play size={18} className="fill-white" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="editorial-video-info">
+                                <h3>{video.data.title}</h3>
+                                <time>{video.data.date ? formatDate(video.data.date) : ''}</time>
+                            </div>
                         </a>
                     ))}
                 </div>
+            </section>
+        )}
+
+        {/* ===== CONTENT GRAPH ===== */}
+        <section class="editorial-section">
+            <div class="editorial-section-header">
+                <span class="editorial-eyebrow">ACTIVITY</span>
+                <span class="editorial-section-count">
+                    {lastYearPostsCount} posts this year
+                </span>
             </div>
 
-                <!-- Recent Posts Section -->
-                <div>
-                    <div class="flex items-center justify-between mb-6 pb-2 border-b border-[var(--border-main)]">
-                        <h2 class="text-2xl font-bold text-[var(--fg-primary)] flex items-center gap-2">
-                            <BookOpen className="text-[var(--header-h1)]" size={24} />
-                            Recent Posts
-                        </h2>
-                        <span class="text-xs text-[var(--fg-secondary)] bg-[var(--bg-sidebar)] px-3 py-1 rounded-full border border-[var(--border-main)]">
-                            Showing {recentPosts.length} entries
-                        </span>
-                    </div>
+            <div class="editorial-graph-card">
+                <div class="editorial-graph-container">
+                    <div class="editorial-graph-wrapper">
+                        {/* Day labels */}
+                        <div class="editorial-graph-labels">
+                            <span>S</span>
+                            <span>M</span>
+                            <span>T</span>
+                            <span>W</span>
+                            <span>T</span>
+                            <span>F</span>
+                            <span>S</span>
+                        </div>
 
-                    <div class="grid gap-6">
-                        {recentPosts.map((post) => (
-                            <a
-                                href={`/${post.slug}`}
-                                class="group block p-6 rounded-xl bg-[var(--bg-sidebar)] border border-[var(--border-main)] hover:border-[var(--header-h1)] transition-all duration-300 relative overflow-hidden shadow-sm no-underline"
-                            >
-                                <div class="absolute inset-0 bg-gradient-to-r from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="space-y-2">
-                                        <h3 class="text-lg font-bold text-[var(--fg-primary)] group-hover:text-[var(--header-h1)] transition-colors duration-200 m-0">
-                                            {post.data.title}
-                                        </h3>
-                                        <div class="flex flex-wrap gap-2 text-xs text-[var(--fg-secondary)] items-center">
-                                            <span class="flex items-center gap-1">
-                                                <Calendar size={12} />
-                                                {post.data.date}
-                                            </span>
-                                            {post.data.tags && post.data.tags.slice(0, 3).map((tag: string) => (
-                                                <span class="px-2 py-0.5 rounded-full bg-[var(--bg-main)] text-[var(--fg-secondary)] border border-[var(--border-main)]">
-                                                    #{tag}
-                                                </span>
-                                            ))}
-                                        </div>
+                        {/* Weeks grid */}
+                        <div class="editorial-graph-grid">
+                            {weeks.map((week, index) => {
+                                let responsiveClass = "editorial-graph-col";
+                                if (index < 20) {
+                                    responsiveClass = "editorial-graph-col editorial-graph-col-desktop";
+                                } else if (index < 33) {
+                                    responsiveClass = "editorial-graph-col editorial-graph-col-tablet";
+                                }
+
+                                return (
+                                    <div class={`${responsiveClass}`}>
+                                        {week.monthLabel && (
+                                            <span class="editorial-graph-month">{week.monthLabel}</span>
+                                        )}
+                                        {week.days.map((day) => {
+                                            let level = "0";
+                                            if (day.count === 1) level = "1";
+                                            else if (day.count === 2) level = "2";
+                                            else if (day.count >= 3) level = "3";
+
+                                            return (
+                                                <div class="editorial-graph-cell-wrap" title={`${day.count} post${day.count === 1 ? '' : 's'} on ${formatDate(day.date)}`}>
+                                                    <div class={`editorial-graph-cell editorial-graph-level-${level}`} />
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                    <ArrowUpRight size={18} className="text-[var(--fg-secondary)] group-hover:text-[var(--header-h1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                                </div>
-                                {post.data.summary && (
-                                    <p class="text-sm text-[var(--fg-secondary)] leading-relaxed mt-3 mb-0 line-clamp-2">
-                                        {post.data.summary}
-                                    </p>
-                                )}
-                            </a>
-                        ))}
-                    </div>
-                </div>
-
-                <!-- Recent Videos Section -->
-                <div>
-                    <div class="flex items-center justify-between mb-6 pb-2 border-b border-[var(--border-main)]">
-                        <h2 class="text-2xl font-bold text-[var(--fg-primary)] flex items-center gap-2">
-                            <Play className="text-red-500" size={24} />
-                            Recent Videos
-                        </h2>
-                        <span class="text-xs text-[var(--fg-secondary)] bg-[var(--bg-sidebar)] px-3 py-1 rounded-full border border-[var(--border-main)]">
-                            {videoPosts.length} videos
-                        </span>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {recentVideosWithMetadata.map((video) => (
-                            <a
-                                href={`/${video.slug}`}
-                                class="group block bg-[var(--bg-sidebar)] border border-[var(--border-main)] hover:border-red-500/50 rounded-xl overflow-hidden shadow-sm transition-all duration-300 no-underline"
-                            >
-                                <div class="aspect-video relative overflow-hidden bg-black flex items-center justify-center">
-                                    {video.thumbnail ? (
-                                        <img
-                                            src={video.thumbnail}
-                                            alt={video.data.title}
-                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
-                                    ) : (
-                                        <div class="w-full h-full bg-gradient-to-tr from-red-950/20 to-slate-900 flex flex-col items-center justify-center text-[var(--fg-secondary)]">
-                                            <Play size={40} className="text-red-500/60" />
-                                        </div>
-                                    )}
-                                    <!-- Play Overlay Button -->
-                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-all duration-300">
-                                            <Play size={20} className="fill-white translate-x-0.5" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-4 space-y-2">
-                                    <h3 class="text-sm font-bold text-[var(--fg-primary)] group-hover:text-red-400 transition-colors duration-200 line-clamp-2 m-0 leading-snug">
-                                        {video.data.title}
-                                    </h3>
-                                    <div class="flex items-center gap-2 text-xs text-[var(--fg-secondary)]">
-                                        <Calendar size={12} />
-                                        <span>{video.data.date ? new Date(video.data.date).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'}) : ''}</span>
-                                    </div>
-                                </div>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-
-                <!-- Posts Section -->
-                <div>
-                    <div class="flex items-center justify-between mb-6 pb-2 border-b border-[var(--border-main)]">
-                        <h2 class="text-2xl font-bold text-[var(--fg-primary)] flex items-center gap-2">
-                            <BookOpen className="text-[var(--header-h2)]" size={24} />
-                            Posts
-                        </h2>
-                        <span class="text-xs text-[var(--fg-secondary)] bg-[var(--bg-sidebar)] px-3 py-1 rounded-full border border-[var(--border-main)]">
-                            {blogPosts.length} total entries
-                        </span>
-                    </div>
-
-                    <div class="prose max-w-none dark:prose-invert">
-                        <Fragment set:html={renderTreeHtml(postsTree)} />
-                    </div>
-                </div>
-
-                <!-- Content Graph Section -->
-                <div>
-                    <div class="flex items-center justify-between mb-6 pb-2 border-b border-[var(--border-main)]">
-                        <h2 class="text-2xl font-bold text-[var(--fg-primary)] flex items-center gap-2">
-                            <Calendar className="text-[var(--header-h2)]" size={24} />
-                            Content Graph
-                        </h2>
-                        <span class="text-xs text-[var(--fg-secondary)] bg-[var(--bg-sidebar)] px-3 py-1 rounded-full border border-[var(--border-main)]">
-                            {lastYearPostsCount} contributions in the last year
-                        </span>
-                    </div>
-
-                    <div class="p-6 rounded-xl bg-[var(--bg-sidebar)] border border-[var(--border-main)] shadow-sm">
-                        <div class="flex flex-col items-center select-none">
-                            <div class="flex gap-2.5 pt-5 pb-1 relative">
-                                <!-- Day labels -->
-                                <div class="grid grid-rows-7 text-[9px] text-[var(--fg-secondary)] font-medium h-[82px] justify-between pr-1.5 py-0.5 leading-none">
-                                    <span>Sun</span>
-                                    <span>Mon</span>
-                                    <span>Tue</span>
-                                    <span>Wed</span>
-                                    <span>Thu</span>
-                                    <span>Fri</span>
-                                    <span>Sat</span>
-                                </div>
-
-                                <!-- The Responsive Column Weeks Grid -->
-                                <div class="flex gap-[3px] p-1 bg-[var(--bg-main)] rounded-lg border border-[var(--border-main)]/60">
-                                    {weeks.map((week, index) => {
-                                        // 53 weeks total. Responsive column folding to avoid overflow scrolling:
-                                        // Mobile: Show latest 20 weeks (indices 33-52)
-                                        // Tablet: Show latest 33 weeks (indices 20-52)
-                                        // Desktop: Show full 53 weeks (indices 0-52)
-                                        let responsiveClass = "flex";
-                                        if (index < 20) {
-                                            responsiveClass = "hidden md:flex";
-                                        } else if (index < 33) {
-                                            responsiveClass = "hidden sm:flex";
-                                        }
-
-                                        return (
-                                            <div class={`flex flex-col gap-[3px] relative ${responsiveClass}`}>
-                                                {week.monthLabel && (
-                                                    <span class="absolute -top-[17px] left-0 text-[8px] font-semibold text-[var(--fg-secondary)] whitespace-nowrap opacity-80 uppercase tracking-wider">
-                                                        {week.monthLabel}
-                                                    </span>
-                                                )}
-                                                {week.days.map((day) => {
-                                                    let colorClass = "bg-[var(--bg-sidebar)] border border-[var(--border-main)]/40";
-                                                    if (day.count === 1) {
-                                                        colorClass = "bg-emerald-500/20 border border-emerald-500/30";
-                                                    } else if (day.count === 2) {
-                                                        colorClass = "bg-emerald-500/50 border border-emerald-500/40";
-                                                    } else if (day.count >= 3) {
-                                                        colorClass = "bg-emerald-500 border border-emerald-600";
-                                                    }
-                                                    return (
-                                                        <div class="relative group/cell">
-                                                            <div 
-                                                                class={`w-[9px] h-[9px] rounded-[2px] transition-transform hover:scale-125 cursor-pointer ${colorClass}`}
-                                                            />
-                                                            <!-- Custom Hover Tooltip Bubble -->
-                                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2.5 py-1 bg-black border border-slate-800 text-[9px] text-white font-medium rounded shadow-xl pointer-events-none opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 scale-95 group-hover/cell:scale-100 origin-bottom">
-                                                                {day.count} post{day.count === 1 ? '' : 's'} on {day.date.toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})}
-                                                                <!-- Tiny Tooltip Arrow -->
-                                                                <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-0.5 border-[3px] border-transparent border-t-black"></div>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            <!-- Legend -->
-                            <div class="flex items-center justify-end gap-1.5 text-[9px] text-[var(--fg-secondary)] w-full mt-3 pr-2">
-                                <span>Less</span>
-                                <div class="w-[9px] h-[9px] rounded-[2px] bg-[var(--bg-sidebar)] border border-[var(--border-main)]/40" />
-                                <div class="w-[9px] h-[9px] rounded-[2px] bg-emerald-500/20 border border-emerald-500/30" />
-                                <div class="w-[9px] h-[9px] rounded-[2px] bg-emerald-500/50 border border-emerald-500/40" />
-                                <div class="w-[9px] h-[9px] rounded-[2px] bg-emerald-500 border border-emerald-600" />
-                                <span>More</span>
-                            </div>
+                                );
+                            })}
                         </div>
                     </div>
-                </div>
 
-                <!-- Tags Section -->
-                <div>
-                    <div class="flex items-center justify-between mb-6 pb-2 border-b border-[var(--border-main)]">
-                        <h2 class="text-2xl font-bold text-[var(--fg-primary)] flex items-center gap-2">
-                            <Tag className="text-[var(--header-h3)]" size={24} />
-                            Tags
-                        </h2>
-                        <span class="text-xs text-[var(--fg-secondary)] bg-[var(--bg-sidebar)] px-3 py-1 rounded-full border border-[var(--border-main)]">
-                            {sortedTags.length} topics
-                        </span>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2">
-                        {sortedTags.map(([tagName, count]) => (
-                            <a
-                                href={`/tags/${tagName}`}
-                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-sidebar)] hover:bg-[var(--hover-bg)] border border-[var(--border-main)] hover:border-[var(--header-h3)] text-xs text-[var(--fg-primary)] transition-all duration-200 group no-underline cursor-pointer"
-                            >
-                                <span class="group-hover:text-[var(--header-h3)] transition-colors">#{tagName}</span>
-                                <span class="px-1.5 py-0.2 text-[10px] font-semibold bg-[var(--bg-main)] rounded-full text-[var(--fg-secondary)] border border-[var(--border-main)]">
-                                    {count}
-                                </span>
-                            </a>
-                        ))}
+                    {/* Legend */}
+                    <div class="editorial-graph-legend">
+                        <span>Less</span>
+                        <div class="editorial-graph-cell editorial-graph-level-0" />
+                        <div class="editorial-graph-cell editorial-graph-level-1" />
+                        <div class="editorial-graph-cell editorial-graph-level-2" />
+                        <div class="editorial-graph-cell editorial-graph-level-3" />
+                        <span>More</span>
                     </div>
                 </div>
+            </div>
+        </section>
 
-        </div>
+        {/* ===== ARCHIVE ===== */}
+        <section class="editorial-section">
+            <div class="editorial-section-header">
+                <span class="editorial-eyebrow">ARCHIVE</span>
+                <span class="editorial-section-count">{blogPosts.length} entries</span>
+            </div>
+
+            <div class="editorial-archive-card">
+                <Fragment set:html={renderTreeHtml(postsTree)} />
+            </div>
+        </section>
+
+        {/* ===== TOPICS ===== */}
+        <section class="editorial-section">
+            <div class="editorial-section-header">
+                <span class="editorial-eyebrow">TOPICS</span>
+                <span class="editorial-section-count">{sortedTags.length} tags</span>
+            </div>
+
+            <div class="editorial-tags-wrap">
+                {sortedTags.map(([tagName, count]) => (
+                    <a
+                        href={`/tags/${tagName}`}
+                        class="editorial-tag-pill"
+                    >
+                        {tagName}
+                        <span class="editorial-tag-count">{count}</span>
+                    </a>
+                ))}
+            </div>
+        </section>
+
+        {/* ===== CONNECT ===== */}
+        <section class="editorial-section editorial-section-last">
+            <div class="editorial-section-header">
+                <span class="editorial-eyebrow">CONNECT</span>
+            </div>
+            <div class="editorial-connect-row">
+                {socialLinks.map((social) => (
+                    <a
+                        href={social.href}
+                        target={social.href.startsWith("mailto") ? undefined : "_blank"}
+                        rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+                        class="editorial-connect-link"
+                    >
+                        {social.name}
+                        <ArrowUpRight size={12} />
+                    </a>
+                ))}
+            </div>
+        </section>
     </div>
 </ExplorerLayout>
+
+<style>
+    /* ===== EDITORIAL DESIGN SYSTEM ===== */
+
+    .editorial-root {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 32px 96px;
+    }
+
+    /* ===== HERO ===== */
+    .editorial-hero {
+        position: relative;
+        padding: 96px 0 64px;
+        overflow: hidden;
+    }
+
+    .editorial-hero-gradient {
+        position: absolute;
+        top: -40%;
+        right: -20%;
+        width: 80%;
+        height: 200%;
+        background: radial-gradient(ellipse at 30% 50%,
+            rgba(0, 124, 240, 0.08) 0%,
+            rgba(0, 223, 216, 0.06) 20%,
+            rgba(121, 40, 202, 0.06) 40%,
+            rgba(255, 0, 128, 0.04) 60%,
+            transparent 80%
+        );
+        filter: blur(60px);
+        pointer-events: none;
+    }
+
+    .editorial-hero-content {
+        position: relative;
+    }
+
+    .editorial-display {
+        font-family: var(--font-body);
+        font-size: 48px;
+        font-weight: 600;
+        line-height: 48px;
+        letter-spacing: -2.4px;
+        color: var(--fg-primary);
+        margin: 12px 0 16px;
+    }
+
+    .editorial-lead {
+        font-size: 16px;
+        line-height: 24px;
+        color: var(--fg-secondary);
+        max-width: 520px;
+        margin: 0 0 32px;
+    }
+
+    .editorial-hero-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .editorial-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 14px;
+        height: 40px;
+        background: var(--fg-primary);
+        color: var(--bg-main);
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 100px;
+        text-decoration: none;
+        transition: opacity 0.15s;
+    }
+    .editorial-btn-primary:hover { opacity: 0.85; }
+
+    .editorial-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 14px;
+        height: 40px;
+        background: var(--bg-sidebar);
+        color: var(--fg-primary);
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid var(--border-main);
+        border-radius: 100px;
+        text-decoration: none;
+        transition: border-color 0.15s;
+    }
+    .editorial-btn-secondary:hover { border-color: var(--fg-secondary); }
+
+    /* ===== EYEBROW ===== */
+    .editorial-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        letter-spacing: 0.05em;
+        color: var(--fg-secondary);
+        text-transform: uppercase;
+    }
+
+    /* ===== SECTIONS ===== */
+    .editorial-section {
+        padding-top: 64px;
+    }
+    .editorial-section-last {
+        padding-bottom: 32px;
+    }
+
+    .editorial-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-main);
+        margin-bottom: 24px;
+    }
+
+    .editorial-section-link {
+        font-size: 14px;
+        color: var(--color-link, #3794ff);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .editorial-section-link:hover { text-decoration: underline; }
+
+    .editorial-section-count {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--fg-secondary);
+    }
+
+    /* ===== POST CARDS ===== */
+    .editorial-posts-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .editorial-post-card {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border-main);
+        text-decoration: none;
+        color: inherit;
+        transition: background-color 0.15s;
+    }
+    .editorial-post-card:first-child {
+        padding-top: 0;
+    }
+    .editorial-post-card:hover {
+        background: none;
+    }
+
+    .editorial-post-card-inner {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .editorial-post-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--fg-secondary);
+        margin-bottom: 6px;
+    }
+    .editorial-post-meta time {
+        font-family: var(--font-mono);
+        color: var(--fg-secondary);
+    }
+
+    .editorial-tag-inline {
+        font-size: 11px;
+        color: var(--fg-secondary);
+        padding: 1px 6px;
+        border: 1px solid var(--border-main);
+        border-radius: 100px;
+    }
+
+    .editorial-post-title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+        letter-spacing: -0.3px;
+        color: var(--fg-primary);
+        margin: 0 0 4px;
+        transition: color 0.15s;
+    }
+    .editorial-post-card:hover .editorial-post-title {
+        color: var(--color-link, #3794ff);
+    }
+
+    .editorial-post-summary {
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--fg-secondary);
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    :global(.editorial-post-arrow) {
+        color: var(--fg-secondary);
+        flex-shrink: 0;
+        margin-top: 4px;
+        opacity: 0;
+        transform: translate(-4px, 4px);
+        transition: all 0.2s;
+    }
+    .editorial-post-card:hover :global(.editorial-post-arrow) {
+        opacity: 1;
+        transform: translate(0, 0);
+        color: var(--color-link, #3794ff);
+    }
+
+    /* ===== VIDEO CARDS ===== */
+    .editorial-videos-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .editorial-video-card {
+        display: block;
+        border: 1px solid var(--border-main);
+        border-radius: 12px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        background: var(--bg-sidebar);
+        transition: border-color 0.15s;
+    }
+    .editorial-video-card:hover {
+        border-color: var(--fg-secondary);
+    }
+
+    .editorial-video-thumb {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: var(--bg-main);
+    }
+    .editorial-video-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    .editorial-video-card:hover .editorial-video-thumb img {
+        transform: scale(1.03);
+    }
+    .editorial-video-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--fg-secondary);
+    }
+
+    .editorial-video-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.3);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .editorial-video-card:hover .editorial-video-overlay {
+        opacity: 1;
+    }
+    .editorial-play-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--fg-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .editorial-video-info {
+        padding: 12px 16px;
+    }
+    .editorial-video-info h3 {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: var(--fg-primary);
+        margin: 0 0 4px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .editorial-video-info time {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--fg-secondary);
+    }
+
+    /* ===== CONTENT GRAPH ===== */
+    .editorial-graph-card {
+        border: 1px solid var(--border-main);
+        border-radius: 12px;
+        background: var(--bg-sidebar);
+        padding: 24px;
+    }
+
+    .editorial-graph-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .editorial-graph-wrapper {
+        display: flex;
+        gap: 8px;
+        padding-top: 20px;
+    }
+
+    .editorial-graph-labels {
+        display: grid;
+        grid-template-rows: repeat(7, 1fr);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--fg-secondary);
+        height: 82px;
+        padding-right: 4px;
+    }
+
+    .editorial-graph-grid {
+        display: flex;
+        gap: 3px;
+    }
+
+    .editorial-graph-col {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        position: relative;
+    }
+    .editorial-graph-col-desktop {
+        display: none;
+    }
+    .editorial-graph-col-tablet {
+        display: none;
+    }
+
+    .editorial-graph-month {
+        position: absolute;
+        top: -17px;
+        left: 0;
+        font-family: var(--font-mono);
+        font-size: 8px;
+        font-weight: 500;
+        color: var(--fg-secondary);
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .editorial-graph-cell-wrap {
+        cursor: default;
+    }
+
+    .editorial-graph-cell {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        transition: transform 0.1s;
+    }
+    .editorial-graph-cell-wrap:hover .editorial-graph-cell {
+        transform: scale(1.3);
+    }
+
+    .editorial-graph-level-0 {
+        background: var(--hover-bg);
+        border: 1px solid var(--border-main);
+    }
+    .editorial-graph-level-1 {
+        background: rgba(0, 112, 243, 0.2);
+        border: 1px solid rgba(0, 112, 243, 0.3);
+    }
+    .editorial-graph-level-2 {
+        background: rgba(0, 112, 243, 0.5);
+        border: 1px solid rgba(0, 112, 243, 0.5);
+    }
+    .editorial-graph-level-3 {
+        background: #0070f3;
+        border: 1px solid #0761d1;
+    }
+
+    .editorial-graph-legend {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--fg-secondary);
+        margin-top: 12px;
+        align-self: flex-end;
+    }
+
+    /* ===== ARCHIVE ===== */
+    .editorial-archive-card {
+        border: 1px solid var(--border-main);
+        border-radius: 12px;
+        background: var(--bg-sidebar);
+        padding: 24px 32px;
+    }
+
+    :global(.editorial-archive-h3) {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--fg-primary);
+        margin: 24px 0 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border-main);
+    }
+    :global(.editorial-archive-h3:first-child) {
+        margin-top: 0;
+    }
+    :global(.editorial-archive-h4) {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--fg-primary);
+        margin: 16px 0 8px;
+    }
+    :global(.editorial-archive-h5) {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--fg-secondary);
+        margin: 12px 0 6px;
+    }
+    :global(.editorial-archive-list) {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 16px;
+    }
+    :global(.editorial-archive-item) {
+        padding: 4px 0;
+    }
+    :global(.editorial-archive-link) {
+        font-size: 14px;
+        color: var(--fg-primary);
+        text-decoration: none;
+        transition: color 0.15s;
+    }
+    :global(.editorial-archive-link:hover) {
+        color: var(--color-link, #3794ff);
+    }
+    :global(.editorial-archive-nested) {
+        padding-left: 20px;
+        border-left: 1px solid var(--border-main);
+        margin: 8px 0;
+    }
+
+    /* ===== TAGS ===== */
+    .editorial-tags-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .editorial-tag-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--fg-primary);
+        background: var(--bg-sidebar);
+        border: 1px solid var(--border-main);
+        border-radius: 100px;
+        text-decoration: none;
+        transition: border-color 0.15s;
+    }
+    .editorial-tag-pill:hover {
+        border-color: var(--fg-secondary);
+    }
+    .editorial-tag-count {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--fg-secondary);
+        background: var(--bg-main);
+        padding: 0 6px;
+        border-radius: 100px;
+    }
+
+    /* ===== CONNECT ===== */
+    .editorial-connect-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .editorial-connect-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--fg-primary);
+        text-decoration: none;
+        padding: 6px 0;
+        transition: color 0.15s;
+    }
+    .editorial-connect-link:hover {
+        color: var(--color-link, #3794ff);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 640px) {
+        .editorial-graph-col-tablet {
+            display: flex;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .editorial-graph-col-desktop {
+            display: flex;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .editorial-root {
+            padding: 0 20px 64px;
+        }
+        .editorial-hero {
+            padding: 48px 0 40px;
+        }
+        .editorial-display {
+            font-size: 32px;
+            line-height: 36px;
+            letter-spacing: -1.6px;
+        }
+        .editorial-videos-grid {
+            grid-template-columns: 1fr;
+        }
+        .editorial-section {
+            padding-top: 40px;
+        }
+        .editorial-archive-card {
+            padding: 16px 20px;
+        }
+        .editorial-hero-actions {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>

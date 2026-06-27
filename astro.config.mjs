@@ -6,6 +6,7 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
 import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 
 /**
  * @returns {(tree: any) => void}
@@ -123,8 +124,8 @@ function rehypeSocialEmbed() {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://magar.xyz',
-  integrations: [react(), mdx()],
+  site: 'https://www.magar.xyz',
+  integrations: [react(), mdx(), sitemap()],
 
   markdown: {
     rehypePlugins: [rehypeSocialEmbed]

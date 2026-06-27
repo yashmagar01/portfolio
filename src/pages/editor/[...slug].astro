@@ -2,10 +2,12 @@
 import { getCollection, getEntry } from "astro:content";
 import ExplorerLayout from "../../layouts/ExplorerLayout.astro";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
     const docs = await getCollection("docs");
     return docs.map((doc) => ({
-        params: { slug: doc.slug },
+        params: { slug: doc.id },
     }));
 }
 
@@ -23,9 +25,9 @@ if (!doc) {
 ---
 
 <ExplorerLayout
-    activePostId={doc.slug}
+    activePostId={doc.id}
     title={doc.data.title}
-    code={doc.body}
+    code={doc.body || ""}
     tabs={doc.data.tabs}
     viewMode="editor"
 />

@@ -23,17 +23,19 @@ const siteTitle = title === "yash ajay magar" ? title : `${title} · yash ajay m
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
+        <link rel="sitemap" href="/sitemap-index.xml" />
+        <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
         <link
             rel="alternate"
             type="application/rss+xml"
             title={siteTitle}
             href={new URL("rss.xml", Astro.site)}
         />
-        <!-- Google Fonts: Inter + JetBrains Mono -->
+        <!-- Google Fonts: Geist Sans + Geist Mono (Vercel), Inter + JetBrains Mono fallbacks -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
             rel="stylesheet"
         />
         <title>{siteTitle}</title>
@@ -47,8 +49,8 @@ const siteTitle = title === "yash ajay magar" ? title : `${title} · yash ajay m
         <meta name="twitter:creator" content="@yashmag50534849" />
         <style is:global>
             :root {
-                --font-body: "Inter", system-ui, -apple-system, sans-serif;
-                --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+                --font-body: "Geist", "Inter", system-ui, -apple-system, sans-serif;
+                --font-mono: "Geist Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
             }
             body {
                 margin: 0;

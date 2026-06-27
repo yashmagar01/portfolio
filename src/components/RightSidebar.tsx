@@ -84,7 +84,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
   return (
     <div className="hidden lg:flex flex-col h-full bg-[var(--bg-sidebar)] border-l border-[var(--border-main)] text-[var(--fg-primary)] w-64 select-none shrink-0 overflow-hidden">
       {/* Sidebar Header */}
-      <div className="h-[35px] px-5 flex items-center text-[11px] text-[var(--fg-secondary)] uppercase tracking-wider select-none shrink-0 border-b border-[var(--border-main)]">
+      <div className="h-[33px] px-5 flex items-center text-[11px] text-[var(--fg-secondary)] uppercase tracking-wider select-none shrink-0 border-b border-[var(--border-main)] font-medium" style={{ fontFamily: 'var(--font-mono)' }}>
         <span>Information</span>
       </div>
 

@@ -312,7 +312,7 @@ const Explorer: React.FC<ExplorerProps> = ({
         ${className || ''}
       `}>
         {/* Sidebar Header */}
-        <div className="h-[35px] px-5 flex items-center justify-between text-[11px] text-[var(--fg-secondary)] uppercase tracking-wider select-none shrink-0">
+        <div className="h-[33px] px-5 flex items-center justify-between text-[11px] text-[var(--fg-secondary)] uppercase tracking-wider select-none shrink-0 font-medium" style={{ fontFamily: 'var(--font-mono)' }}>
           <span>Explorer</span>
           <div className="flex items-center gap-2">
             {/* <MoreHorizontal size={16} className="cursor-pointer hover:text-[var(--fg-primary)]" /> */}

@@ -18,20 +18,20 @@ export function transformDocsToPosts(
         // In mockData: 'welcome' -> id: 'welcome'
         // In content/docs/welcome.md -> slug: 'welcome'
 
-        const headings = headingsMap[doc.slug] || [];
+        const headings = headingsMap[doc.id] || [];
         const outline: OutlineItem[] = headings.map(h => ({
             id: h.slug,
             label: h.text,
             level: h.depth
         }));
 
-        posts[doc.slug] = {
-            id: doc.slug,
+        posts[doc.id] = {
+            id: doc.id,
             title: doc.data.title,
-            slug: doc.slug,
+            slug: doc.id,
             language: 'markdown', // Default to markdown as they are md files
             date: doc.data.date,
-            content: doc.body,
+            content: doc.body || "",
             outline: outline,
         };
     });
@@ -48,11 +48,11 @@ export function buildFileTree(docs: CollectionEntry<'docs'>[]): FileNode[] {
         children: []
     };
 
-    // Sort docs by slug to ensure deterministic order.
-    docs.sort((a, b) => a.slug.localeCompare(b.slug));
+    // Sort docs by id to ensure deterministic order.
+    docs.sort((a, b) => a.id.localeCompare(b.id));
 
     docs.forEach(doc => {
-        const parts = doc.slug.split('/');
+        const parts = doc.id.split('/');
         let currentFolder = root;
 
         for (let i = 0; i < parts.length; i++) {
@@ -63,13 +63,13 @@ export function buildFileTree(docs: CollectionEntry<'docs'>[]): FileNode[] {
                 // Get original extension from doc.id (e.g. .md or .mdx)
                 const extension = doc.id.includes('.') ? doc.id.substring(doc.id.lastIndexOf('.')) : '.md';
                 // Special case for root-level 'welcome' -> 'README.md'
-                const fileName = (doc.slug === 'welcome' && parts.length === 1) ? 'README.md' : `${part}${extension}`;
+                const fileName = (doc.id === 'welcome' && parts.length === 1) ? 'README.md' : `${part}${extension}`;
                 currentFolder.children = currentFolder.children || [];
                 currentFolder.children.push({
-                    id: `file-${doc.slug}`,
+                    id: `file-${doc.id}`,
                     name: fileName,
                     type: 'file',
-                    postId: doc.slug
+                    postId: doc.id
                 });
             } else {
                 currentFolder.children = currentFolder.children || [];
