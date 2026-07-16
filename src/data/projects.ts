@@ -95,22 +95,22 @@ export const projects: Project[] = [
     slug: 'anicafe',
     file: 'anicafe.tsx',
     title: 'AniCafe',
-    tagline: 'A cozy anime tracking app for people who forget where they left off.',
+    tagline: "Café billing & inventory PWA built for a friend's café in Pune.",
     description:
-      'AniCafe is a personal watch-tracker for anime with a clean, cafe-inspired UI. It syncs with AniList, remembers seasonal picks, and gently nudges you back into shows you paused three months ago.',
+      "AniCafe is a Progressive Web App I built for my friend Aniket's café in Pune. It handles order billing, item management, and daily sales tracking — replacing the paper-and-cash chaos with a fast, offline-capable interface that works on any phone or tablet behind the counter.",
     problem:
-      "Existing trackers feel like spreadsheets. I wanted something that felt like a warm cafe corner where you'd sit down and remember what you were watching.",
+      'Aniket was manually tracking every order on paper and reconciling cash at end of day. Mistakes were frequent, and there was no way to see which items were selling well without re-counting everything by hand.',
     approach:
-      "Started with a mood board of coffee shops and stationery. Built the read model around 'shelves' rather than lists, so a paused show sits on a warmer shelf than a completed one. Auth via Supabase, data hydration from AniList's public GraphQL API, edge-cached at the route level.",
-    tech: ['Next.js', 'TypeScript', 'Supabase', 'GraphQL', 'Tailwind CSS'],
+      "Kept the stack minimal: a PWA so it works offline and installs to the homescreen without an app store. Built a simple admin flow for adding and editing menu items and a billing screen optimised for one-handed use at the counter. Sales data is persisted locally with a lightweight sync to a Supabase table for end-of-day reports.",
+    tech: ['React', 'TypeScript', 'Supabase', 'Tailwind CSS', 'PWA'],
     category: 'web',
     repoUrl: 'https://github.com/yashmagar01/anicafe',
     featured: true,
     year: 2025,
     highlights: [
-      'Shelf-based data model instead of flat lists',
-      'Offline-first with local drafts synced on reconnect',
-      'Ships at ~90KB gzipped for the initial route',
+      'Offline-first PWA — works even when café Wi-Fi drops',
+      'One-handed billing UI optimised for phone screens behind the counter',
+      'Daily sales summary replaces end-of-day manual cash count',
     ],
   },
   {
@@ -184,30 +184,42 @@ export const projects: Project[] = [
     slug: 'cafe-menu',
     file: 'cafe-menu.tsx',
     title: 'Cafe Menu',
-    tagline: "QR-code menu for a friend's roadside cafe.",
+    tagline: "QR-code digital menu for a roadside café — still running two years later.",
     description:
-      "Shipped over a weekend for a friend's roadside cafe as their billing PWA. Still running.",
+      "A static digital menu accessible via QR code, built over a weekend for a friend's roadside café. The owner can update items via a simple admin form without touching any code. No backend, no database — just a fast static page that has cost zero to run since the day it shipped.",
     problem:
-      'Printed menus were sticky and out of date. The owner needed a simple way to update items on the fly.',
-    approach: "A single static page + admin form. That's it.",
+      'Printed menus were always sticky, out of date, and expensive to reprint every time a price changed. The owner needed a way to update items on the fly without calling anyone.',
+    approach:
+      'Single Astro static page with an admin form that rewrites a JSON file and triggers a Cloudflare Pages redeploy via a deploy hook. Updates go live in under 60 seconds. The whole thing took a weekend to build and has needed zero maintenance since.',
     tech: ['Astro', 'Cloudflare Pages'],
     category: 'web',
     featured: false,
     year: 2023,
-    highlights: ['Live for 2 years without a redeploy'],
+    highlights: [
+      'Live for 2+ years with zero maintenance or redeployments',
+      'Zero hosting cost on Cloudflare Pages free tier',
+      'Owner updates menu themselves via a 30-second form — no dev needed',
+    ],
   },
   {
     slug: 'attendance-bot',
     file: 'attendance-bot.py',
     title: 'Attendance Bot',
-    tagline: 'Telegram bot that reminds our batch when attendance is being taken.',
-    description: 'A silly little utility that turned out to be surprisingly load-bearing.',
-    problem: 'Attendance in our department is chaos.',
-    approach: 'Cron + Telegram Bot API + a shared Google Sheet.',
-    tech: ['Python', 'Telegram API'],
+    tagline: 'Telegram bot that pings our batch the moment attendance is being marked.',
+    description:
+      "A practical little utility that turned out to be surprisingly load-bearing. The bot watches a shared Google Sheet our department uses to log attendance and fires a Telegram notification the moment a new row is added — giving students a 2–3 minute window to walk in before it's marked absent.",
+    problem:
+      "Attendance in our department was chaotic. Teachers would mark it at unpredictable times, sometimes mid-lecture. Students who arrived slightly late would miss it entirely and fall below the 75% threshold that determines whether you're allowed to sit exams.",
+    approach:
+      "Python script on a free-tier VM. A cron job polls the Google Sheets API every 2 minutes. When a new attendance row appears, it fires a message to the batch Telegram group via the Bot API. The whole thing is under 80 lines of Python — no framework, no database, just the two APIs and a cron.",
+    tech: ['Python', 'Telegram API', 'Google Sheets API'],
     category: 'tool',
     featured: false,
     year: 2023,
-    highlights: ['100+ daily active users'],
+    highlights: [
+      '100+ daily active users across the batch',
+      'Under 80 lines of Python — zero framework overhead',
+      'Running on a free-tier VM with zero downtime in 18+ months',
+    ],
   },
 ];
