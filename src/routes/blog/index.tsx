@@ -1,8 +1,19 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { posts } from '@/data/blog';
+import type { Post } from '@/data/blog';
 import { BlogNav } from '@/components/blog/BlogNav';
 import { AuthorCard } from '@/components/blog/AuthorCard';
-import { Calendar, Clock, ExternalLink } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  ExternalLink,
+  TrendingUp,
+  Sparkles,
+  BookOpen,
+  ArrowRight,
+  FileText,
+  Zap,
+} from 'lucide-react';
 
 export const Route = createFileRoute('/blog/')({
   head: () => ({
@@ -52,18 +63,10 @@ export const Route = createFileRoute('/blog/')({
   component: BlogIndexPage,
 });
 
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString('en-IN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
-
 function BlogIndexPage() {
   const featured = posts.filter((p) => p.featured);
   const rest = posts.filter((p) => !p.featured);
-  const allCategories = Array.from(new Set(posts.map((p) => p.category)));
+  const totalReadingTime = posts.reduce((s, p) => s + p.readingMinutes, 0);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -71,7 +74,7 @@ function BlogIndexPage() {
 
       <main className="mx-auto max-w-5xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12 border-b border-border pb-10">
+        <div className="mb-10 border-b border-border pb-10">
           <p className="font-mono text-[11px] uppercase tracking-widest text-primary mb-2">
             # blog/
           </p>
@@ -80,24 +83,35 @@ function BlogIndexPage() {
             Essays, opinions, and technical notes. I write about AI, building software, and what
             it's like to ship real things as a self-taught developer.
           </p>
-          <p className="mt-3 font-mono text-[12px] text-muted-foreground">
-            {posts.length} {posts.length === 1 ? 'post' : 'posts'} ·{' '}
-            {posts.reduce((s, p) => s + p.readingMinutes, 0)} min total reading
-          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-4 font-mono text-[12px] text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <FileText className="h-3.5 w-3.5" />
+              {posts.length} posts
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5" />
+              {totalReadingTime} min total
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Zap className="h-3.5 w-3.5" />
+              {posts.filter((p) => p.status === 'updated').length} recently updated
+            </span>
+          </div>
         </div>
 
         <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
-          {/* Post list */}
+          {/* Main content */}
           <div>
             {featured.length > 0 && (
-              <section className="mb-12">
+              <section className="mb-10">
                 <div className="mb-5 flex items-center gap-2">
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-                    featured
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-foreground">
+                    Featured
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
-                <div className="space-y-6">
+                <div className="space-y-5">
                   {featured.map((post) => (
                     <PostCard key={post.slug} post={post} featured />
                   ))}
@@ -106,10 +120,11 @@ function BlogIndexPage() {
             )}
 
             {rest.length > 0 && (
-              <section>
+              <section className="mb-8">
                 <div className="mb-5 flex items-center gap-2">
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-                    all posts
+                  <TrendingUp className="h-4 w-4 text-primary" />
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-foreground">
+                    Latest
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
@@ -131,28 +146,9 @@ function BlogIndexPage() {
           {/* Sidebar */}
           <aside className="space-y-6">
             <AuthorCard />
-
-            {allCategories.length > 0 && (
-              <div className="rounded-xl border border-border bg-card p-5">
-                <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
-                  topics
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {allCategories.map((cat) => (
-                    <span
-                      key={cat}
-                      className="rounded-full border border-border bg-muted px-3 py-1 font-mono text-[11px] text-muted-foreground"
-                    >
-                      {cat}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
             <div className="rounded-xl border border-border bg-card p-5">
               <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
-                portfolio
+                Portfolio
               </p>
               <a
                 href="/"
@@ -169,7 +165,13 @@ function BlogIndexPage() {
   );
 }
 
-function PostCard({ post, featured }: { post: (typeof posts)[0]; featured?: boolean }) {
+const difficultyColors: Record<string, string> = {
+  beginner: 'border-green-200 bg-green-50 text-green-700',
+  intermediate: 'border-amber-200 bg-amber-50 text-amber-700',
+  advanced: 'border-red-200 bg-red-100 text-red-700',
+};
+
+function PostCard({ post, featured }: { post: Post; featured?: boolean }) {
   return (
     <Link
       to="/blog/$slug"
@@ -180,13 +182,25 @@ function PostCard({ post, featured }: { post: (typeof posts)[0]; featured?: bool
           : 'border-border bg-card p-5 hover:border-primary/30'
       }`}
     >
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
         <span className="rounded-full bg-muted px-2.5 py-0.5 font-mono text-[10px] text-muted-foreground capitalize">
           {post.category.replace('-', ' ')}
         </span>
         {featured && (
           <span className="rounded-full bg-primary/10 px-2.5 py-0.5 font-mono text-[10px] text-primary">
             featured
+          </span>
+        )}
+        {post.difficulty && (
+          <span
+            className={`rounded-full border px-2.5 py-0.5 font-mono text-[10px] capitalize ${difficultyColors[post.difficulty]}`}
+          >
+            {post.difficulty}
+          </span>
+        )}
+        {post.series && (
+          <span className="rounded-full bg-purple-50 border border-purple-200 px-2.5 py-0.5 font-mono text-[10px] text-purple-700">
+            {post.series.part}/{post.series.total}
           </span>
         )}
       </div>
@@ -203,7 +217,11 @@ function PostCard({ post, featured }: { post: (typeof posts)[0]; featured?: bool
       <div className="mt-4 flex flex-wrap items-center gap-3 font-mono text-[11px] text-muted-foreground">
         <span className="flex items-center gap-1">
           <Calendar className="h-3 w-3" />
-          {new Date(post.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+          {new Date(post.date).toLocaleDateString('en-IN', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
         </span>
         <span className="flex items-center gap-1">
           <Clock className="h-3 w-3" />
@@ -216,8 +234,11 @@ function PostCard({ post, featured }: { post: (typeof posts)[0]; featured?: bool
             </span>
           ))}
         </div>
-        <span className="ml-auto text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-          Read →
+        {post.updatedDate && (
+          <span className="text-primary/60 text-[10px]">Updated</span>
+        )}
+        <span className="ml-auto text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+          Read <ArrowRight className="h-3 w-3" />
         </span>
       </div>
     </Link>
