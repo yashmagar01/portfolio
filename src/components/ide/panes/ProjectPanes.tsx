@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { projects, type Project } from '@/data/projects';
 import { CommentCaption, EditorContainer, Item, KeywordLabel } from './editor-shell';
-import { useTabs } from '@/lib/ide/tabs-context';
+import { useTabs, type OpenTab } from '@/lib/ide/tabs-context';
 import { motion } from 'motion/react';
 import {
   Archive,
@@ -154,7 +154,7 @@ function FilterChip({
   );
 }
 
-function ProjectCard({ project, onOpen }: { project: Project; onOpen: (t: any) => void }) {
+function ProjectCard({ project, onOpen }: { project: Project; onOpen: (t: OpenTab) => void }) {
   return (
     <motion.button
       whileHover={{ y: -4, scale: 1.015 }}
@@ -198,7 +198,7 @@ function ProjectRow({
   muted,
 }: {
   project: Project;
-  onOpen: (t: any) => void;
+  onOpen: (t: OpenTab) => void;
   muted?: boolean;
 }) {
   return (
@@ -470,7 +470,13 @@ function DetailsCard({ project }: { project: Project }) {
 }
 
 // ─── More Projects Card ───
-function MoreProjectsCard({ current, onOpen }: { current: Project; onOpen: (tab: any) => void }) {
+function MoreProjectsCard({
+  current,
+  onOpen,
+}: {
+  current: Project;
+  onOpen: (tab: OpenTab) => void;
+}) {
   const others = projects
     .filter((p) => p.slug !== current.slug)
     .sort((a, b) => {
@@ -527,7 +533,7 @@ function RightRail({
 }: {
   project: Project;
   currentSlug: string;
-  onOpen: (tab: any) => void;
+  onOpen: (tab: OpenTab) => void;
 }) {
   return (
     <aside className="flex flex-col gap-4">
