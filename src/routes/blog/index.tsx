@@ -1,8 +1,12 @@
+import { useState, useMemo } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { posts } from '@/data/blog';
 import type { Post } from '@/data/blog';
 import { BlogNav } from '@/components/blog/BlogNav';
 import { AuthorCard } from '@/components/blog/AuthorCard';
+import { SearchDialog } from '@/components/blog/SearchDialog';
+import { FilterBar } from '@/components/blog/FilterBar';
+import { ArchiveView } from '@/components/blog/ArchiveView';
 import {
   Calendar,
   Clock,
@@ -10,9 +14,11 @@ import {
   TrendingUp,
   Sparkles,
   BookOpen,
-  ArrowRight,
-  FileText,
+  Tag,
   Zap,
+  ArrowRight,
+  Flame,
+  FileText,
 } from 'lucide-react';
 
 export const Route = createFileRoute('/blog/')({
@@ -63,14 +69,94 @@ export const Route = createFileRoute('/blog/')({
   component: BlogIndexPage,
 });
 
+function formatDate(d: string) {
+  return new Date(d).toLocaleDateString('en-IN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+type ViewMode = 'grid' | 'archive';
+
 function BlogIndexPage() {
-  const featured = posts.filter((p) => p.featured);
-  const rest = posts.filter((p) => !p.featured);
-  const totalReadingTime = posts.reduce((s, p) => s + p.readingMinutes, 0);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState('newest');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+  const allCategories = useMemo(
+    () => Array.from(new Set(posts.map((p) => p.category))),
+    [],
+  );
+
+  const allTags = useMemo(() => {
+    const tagCounts = new Map<string, number>();
+    for (const p of posts) {
+      for (const t of p.tags) {
+        tagCounts.set(t, (tagCounts.get(t) || 0) + 1);
+      }
+    }
+    return Array.from(tagCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 15);
+  }, []);
+
+  const filtered = useMemo(() => {
+    let result = [...posts];
+
+    if (categoryFilter) {
+      result = result.filter((p) => p.category === categoryFilter);
+    }
+    if (difficultyFilter) {
+      result = result.filter((p) => p.difficulty === difficultyFilter);
+    }
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.title.toLowerCase().includes(q) ||
+          p.excerpt.toLowerCase().includes(q) ||
+          p.tags.some((t) => t.includes(q)) ||
+          p.category.includes(q),
+      );
+    }
+
+    switch (sortBy) {
+      case 'oldest':
+        result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case 'longest':
+        result.sort((a, b) => b.readingMinutes - a.readingMinutes);
+        break;
+      case 'shortest':
+        result.sort((a, b) => a.readingMinutes - b.readingMinutes);
+        break;
+      case 'newest':
+      default:
+        result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+
+    return result;
+  }, [categoryFilter, difficultyFilter, searchQuery, sortBy]);
+
+  const featured = useMemo(() => filtered.filter((p) => p.featured), [filtered]);
+  const latest = useMemo(
+    () => filtered.filter((p) => !p.featured),
+    [filtered],
+  );
+
+  const totalReadingTime = useMemo(
+    () => posts.reduce((s, p) => s + p.readingMinutes, 0),
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <BlogNav />
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <main className="mx-auto max-w-5xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
         {/* Header */}
@@ -86,7 +172,7 @@ function BlogIndexPage() {
           <div className="mt-4 flex flex-wrap items-center gap-4 font-mono text-[12px] text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <FileText className="h-3.5 w-3.5" />
-              {posts.length} posts
+              {posts.length} {posts.length === 1 ? 'post' : 'posts'}
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
@@ -99,67 +185,237 @@ function BlogIndexPage() {
           </div>
         </div>
 
-        <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
-          {/* Main content */}
-          <div>
-            {featured.length > 0 && (
-              <section className="mb-10">
-                <div className="mb-5 flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-primary" />
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-foreground">
-                    Featured
-                  </span>
-                  <span className="h-px flex-1 bg-border" />
-                </div>
-                <div className="space-y-5">
-                  {featured.map((post) => (
-                    <PostCard key={post.slug} post={post} featured />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {rest.length > 0 && (
-              <section className="mb-8">
-                <div className="mb-5 flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" />
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-foreground">
-                    Latest
-                  </span>
-                  <span className="h-px flex-1 bg-border" />
-                </div>
-                <div className="space-y-4">
-                  {rest.map((post) => (
-                    <PostCard key={post.slug} post={post} />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {posts.length === 0 && (
-              <div className="rounded-xl border border-dashed border-border bg-muted/30 p-12 text-center">
-                <p className="text-muted-foreground">No posts yet. Check back soon.</p>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <aside className="space-y-6">
-            <AuthorCard />
-            <div className="rounded-xl border border-border bg-card p-5">
-              <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
-                Portfolio
-              </p>
-              <a
-                href="/"
-                className="group flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors"
+        {/* Filter Bar */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <FilterBar
+              onSearch={setSearchQuery}
+              onCategoryChange={setCategoryFilter}
+              onSortChange={setSortBy}
+              onDifficultyChange={setDifficultyFilter}
+              categories={allCategories}
+              currentCategory={categoryFilter}
+              currentSort={sortBy}
+              currentDifficulty={difficultyFilter}
+            />
+            <div className="flex items-center gap-1 ml-4">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`rounded-md p-1.5 transition-colors ${
+                  viewMode === 'grid'
+                    ? 'bg-muted text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                aria-label="Grid view"
               >
-                <ExternalLink className="h-3.5 w-3.5" />
-                <span>Back to magar.xyz</span>
-              </a>
+                <BookOpen className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('archive')}
+                className={`rounded-md p-1.5 transition-colors ${
+                  viewMode === 'archive'
+                    ? 'bg-muted text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                aria-label="Archive view"
+              >
+                <Calendar className="h-4 w-4" />
+              </button>
             </div>
-          </aside>
+          </div>
         </div>
+
+        {viewMode === 'archive' ? (
+          <ArchiveView posts={filtered} />
+        ) : (
+          <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
+            {/* Main content */}
+            <div>
+              {/* Search active indicator */}
+              {(searchQuery || categoryFilter || difficultyFilter) && (
+                <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-[12px] text-muted-foreground">
+                  <span>Filtered</span>
+                  {searchQuery && (
+                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px]">
+                      "{searchQuery}"
+                    </span>
+                  )}
+                  {categoryFilter && (
+                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] capitalize">
+                      {categoryFilter}
+                    </span>
+                  )}
+                  {difficultyFilter && (
+                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] capitalize">
+                      {difficultyFilter}
+                    </span>
+                  )}
+                  <span className="text-muted-foreground/60">
+                    · {filtered.length} result{filtered.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
+
+              {/* Featured */}
+              {featured.length > 0 && !searchQuery && !categoryFilter && !difficultyFilter && (
+                <section className="mb-10">
+                  <div className="mb-5 flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-foreground">
+                      Featured
+                    </span>
+                    <span className="h-px flex-1 bg-border" />
+                  </div>
+                  <div className="space-y-5">
+                    {featured.map((post) => (
+                      <PostCard key={post.slug} post={post} featured />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Latest */}
+              {latest.length > 0 && !searchQuery && !categoryFilter && !difficultyFilter && (
+                <section className="mb-8">
+                  <div className="mb-5 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-primary" />
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-foreground">
+                      Latest
+                    </span>
+                    <span className="h-px flex-1 bg-border" />
+                  </div>
+                  <div className="space-y-4">
+                    {latest.map((post) => (
+                      <PostCard key={post.slug} post={post} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Filtered results */}
+              {(searchQuery || categoryFilter || difficultyFilter) && filtered.length > 0 && (
+                <section>
+                  <div className="space-y-4">
+                    {filtered.map((post) => (
+                      <PostCard key={post.slug} post={post} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {filtered.length === 0 && (
+                <div className="rounded-xl border border-dashed border-border bg-muted/30 p-12 text-center">
+                  <p className="text-muted-foreground">No posts match your filters.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Sidebar */}
+            <aside className="space-y-6">
+              <AuthorCard />
+
+              {/* Search */}
+              <div
+                className="rounded-xl border border-border bg-card p-5 cursor-pointer hover:border-primary/30 transition-colors"
+                onClick={() => setSearchOpen(true)}
+              >
+                <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
+                  Search
+                </p>
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+                  <span>Search articles...</span>
+                  <kbd className="ml-auto rounded border border-border px-1.5 py-0.5 font-mono text-[10px]">
+                    /
+                  </kbd>
+                </div>
+              </div>
+
+              {/* Categories */}
+              {allCategories.length > 0 && (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
+                    Categories
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {allCategories.map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => setCategoryFilter(cat === categoryFilter ? null : cat)}
+                        className={`rounded-full px-3 py-1 font-mono text-[11px] transition-colors capitalize ${
+                          cat === categoryFilter
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Popular Tags */}
+              {allTags.length > 0 && (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
+                    Tags
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {allTags.map(([tag, count]) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-muted px-2.5 py-0.5 font-mono text-[10px] text-muted-foreground"
+                      >
+                        #{tag}
+                        <span className="ml-1 text-muted-foreground/50">{count}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Series */}
+              {posts.filter((p) => p.series).length > 0 && (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
+                    Series
+                  </p>
+                  <div className="space-y-2">
+                    {Array.from(new Set(posts.filter((p) => p.series).map((p) => p.series!.name))).map(
+                      (seriesName) => {
+                        const seriesPosts = posts.filter((p) => p.series?.name === seriesName);
+                        return (
+                          <div key={seriesName} className="group flex items-center gap-2 text-sm">
+                            <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
+                            <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                              {seriesName}
+                            </span>
+                            <span className="ml-auto font-mono text-[10px] text-muted-foreground/50">
+                              {seriesPosts.length}
+                            </span>
+                          </div>
+                        );
+                      },
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="rounded-xl border border-border bg-card p-5">
+                <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
+                  Portfolio
+                </p>
+                <a
+                  href="/"
+                  className="group flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  <span>Back to magar.xyz</span>
+                </a>
+              </div>
+            </aside>
+          </div>
+        )}
       </main>
     </div>
   );
