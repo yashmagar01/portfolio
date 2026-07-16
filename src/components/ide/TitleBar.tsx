@@ -12,7 +12,9 @@ export function TitleBar() {
         <span className="text-syntax-fn">yash</span>
         <span className="text-muted-foreground">=</span>
         <span className="text-syntax-string">"portfolio.workspace"</span>
-        <span className="text-muted-foreground hidden sm:inline">— Yash · Diploma CE, indie dev</span>
+        <span className="text-muted-foreground hidden sm:inline">
+          — Yash · Diploma CE, indie dev
+        </span>
       </div>
       <div className="w-16" />
     </div>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 import {
   Command,
   CommandDialog,
@@ -7,19 +7,19 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { useTabs } from "@/lib/ide/tabs-context";
-import { projects } from "@/data/projects";
-import { posts } from "@/data/blog";
-import { vlogs } from "@/data/vlogs";
-import { iconForFile } from "@/lib/ide/file-icons";
-import { FolderGit2, BookText, User, Mail, Video } from "lucide-react";
+} from '@/components/ui/command';
+import { useTabs } from '@/lib/ide/tabs-context';
+import { projects } from '@/data/projects';
+import { posts } from '@/data/blog';
+import { vlogs } from '@/data/vlogs';
+import { iconForFile } from '@/lib/ide/file-icons';
+import { FolderGit2, BookText, User, Mail, Video } from 'lucide-react';
 
 export function CommandPalette() {
   const { paletteOpen, setPaletteOpen, open, setSidebarView, setSidebarOpen } = useTabs();
 
   const jumpTo = (id: string, label: string, path: string) => {
-    open({ id, label, path, kind: "file" });
+    open({ id, label, path, kind: 'file' });
     setPaletteOpen(false);
   };
 
@@ -29,17 +29,17 @@ export function CommandPalette() {
       <CommandList className="max-h-[60vh] min-[420px]:max-h-[420px]">
         <CommandEmpty>No matches. Try a project or post name.</CommandEmpty>
         <CommandGroup heading="Quick jump">
-          <CommandItem onSelect={() => jumpTo("about/README.md", "README.md", "about/README.md")}>
+          <CommandItem onSelect={() => jumpTo('about/README.md', 'README.md', 'about/README.md')}>
             <User className="h-4 w-4" />
             About / README
           </CommandItem>
           <CommandItem
-            onSelect={() => jumpTo("about/skills.json", "skills.json", "about/skills.json")}
+            onSelect={() => jumpTo('about/skills.json', 'skills.json', 'about/skills.json')}
           >
             <User className="h-4 w-4" />
             Skills
           </CommandItem>
-          <CommandItem onSelect={() => jumpTo("contact.json", "contact.json", "contact.json")}>
+          <CommandItem onSelect={() => jumpTo('contact.json', 'contact.json', 'contact.json')}>
             <Mail className="h-4 w-4" />
             Contact
           </CommandItem>
@@ -50,7 +50,7 @@ export function CommandPalette() {
             return (
               <CommandItem
                 key={p.slug}
-                value={`project ${p.title} ${p.tech.join(" ")} ${p.tagline}`}
+                value={`project ${p.title} ${p.tech.join(' ')} ${p.tagline}`}
                 onSelect={() => jumpTo(`projects/${p.slug}`, p.file, `projects/${p.file}`)}
               >
                 <Icon className={`h-4 w-4 ${color}`} />
@@ -64,7 +64,7 @@ export function CommandPalette() {
           {posts.map((p) => (
             <CommandItem
               key={p.slug}
-              value={`post ${p.title} ${p.tags.join(" ")}`}
+              value={`post ${p.title} ${p.tags.join(' ')}`}
               onSelect={() => jumpTo(`blog/${p.slug}`, p.file, `blog/${p.file}`)}
             >
               <BookText className="h-4 w-4" />
@@ -88,7 +88,7 @@ export function CommandPalette() {
         <CommandGroup heading="Panels">
           <CommandItem
             onSelect={() => {
-              setSidebarView("explorer");
+              setSidebarView('explorer');
               setSidebarOpen(true);
               setPaletteOpen(false);
             }}
@@ -97,7 +97,7 @@ export function CommandPalette() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
-              setSidebarView("projects");
+              setSidebarView('projects');
               setSidebarOpen(true);
               setPaletteOpen(false);
             }}

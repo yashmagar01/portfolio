@@ -1,7 +1,16 @@
-import { useEffect, useState } from "react";
-import { GitBranch, Github, Linkedin, Twitter, Mail, Bell, Circle, TerminalSquare } from "lucide-react";
-import { useTabs } from "@/lib/ide/tabs-context";
-import { profile } from "@/data/portfolio";
+import { useEffect, useState } from 'react';
+import {
+  GitBranch,
+  Github,
+  Linkedin,
+  Twitter,
+  Mail,
+  Bell,
+  Circle,
+  TerminalSquare,
+} from 'lucide-react';
+import { useTabs } from '@/lib/ide/tabs-context';
+import { profile } from '@/data/portfolio';
 
 export function StatusBar() {
   const { tabs, activeId, cursor, terminalOpen, setTerminalOpen } = useTabs();
@@ -24,7 +33,7 @@ export function StatusBar() {
       </span>
       <span className="flex items-center gap-1">
         <Circle className="h-2 w-2 fill-current" />
-        {activeTab?.path ?? "no file"}
+        {activeTab?.path ?? 'no file'}
       </span>
       <span className="hidden sm:inline text-white/70">
         Ln {cursor.line}, Col {cursor.col}
@@ -40,7 +49,7 @@ export function StatusBar() {
         </button>
         <span className="hidden md:inline text-white/70">UTF-8</span>
         <span className="hidden md:inline text-white/70">TypeScript React</span>
-        <span>{time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+        <span>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         <div className="flex items-center gap-2 pl-2 border-l border-white/20">
           <SocialIcon href={`mailto:${profile.email}`} Icon={Mail} />
           <SocialIcon href={profile.github} Icon={Github} />

@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { TabsProvider, useTabs } from "@/lib/ide/tabs-context";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { TitleBar } from "@/components/ide/TitleBar";
-import { ActivityBar } from "@/components/ide/ActivityBar";
-import { Sidebar } from "@/components/ide/Sidebar";
-import { TabsBar } from "@/components/ide/TabsBar";
-import { EditorPane } from "@/components/ide/panes/EditorPane";
-import { StatusBar } from "@/components/ide/StatusBar";
-import { Terminal } from "@/components/ide/Terminal";
-import { CommandPalette } from "@/components/ide/CommandPalette";
-import { Toaster } from "@/components/ui/sonner";
-import { X, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { TabsProvider, useTabs } from '@/lib/ide/tabs-context';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { TitleBar } from '@/components/ide/TitleBar';
+import { ActivityBar } from '@/components/ide/ActivityBar';
+import { Sidebar } from '@/components/ide/Sidebar';
+import { TabsBar } from '@/components/ide/TabsBar';
+import { EditorPane } from '@/components/ide/panes/EditorPane';
+import { StatusBar } from '@/components/ide/StatusBar';
+import { Terminal } from '@/components/ide/Terminal';
+import { CommandPalette } from '@/components/ide/CommandPalette';
+import { Toaster } from '@/components/ui/sonner';
+import { X, Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 function TrackScroll() {
   const { setCursor } = useTabs();
@@ -23,8 +23,8 @@ function TrackScroll() {
       const line = Math.max(1, Math.floor(target.scrollTop / 20) + 1);
       setCursor({ line, col: 1 });
     };
-    document.addEventListener("scroll", handler, true);
-    return () => document.removeEventListener("scroll", handler, true);
+    document.addEventListener('scroll', handler, true);
+    return () => document.removeEventListener('scroll', handler, true);
   }, [setCursor]);
   return null;
 }
@@ -45,7 +45,14 @@ function Workspace() {
             className="flex items-center gap-2 rounded-md px-2 py-1.5 font-mono text-[13px] hover:bg-hover"
             aria-label="Open explorer"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M3 6h18M3 12h18M3 18h18" />
             </svg>
             explorer
@@ -71,7 +78,11 @@ function Workspace() {
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: 280, opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
-                transition={isMobile ? { duration: 0.1 } : { type: "spring", stiffness: 500, damping: 35, mass: 0.8 }}
+                transition={
+                  isMobile
+                    ? { duration: 0.1 }
+                    : { type: 'spring', stiffness: 500, damping: 35, mass: 0.8 }
+                }
                 className="min-h-0 shrink-0 overflow-hidden"
               >
                 <div className="h-full w-[280px]">
@@ -98,10 +109,10 @@ function Workspace() {
                   onClick={() => setMobileNavOpen(false)}
                 />
                 <motion.aside
-                  initial={{ x: "-100%" }}
+                  initial={{ x: '-100%' }}
                   animate={{ x: 0 }}
-                  exit={{ x: "-100%" }}
-                  transition={{ type: "spring", stiffness: 400, damping: 35, mass: 1 }}
+                  exit={{ x: '-100%' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 35, mass: 1 }}
                   drag="x"
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={{ left: 0.3, right: 0 }}
@@ -147,7 +158,7 @@ function Workspace() {
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           onClick={() => setPaletteOpen(true)}
           className="fixed bottom-20 right-4 z-30 grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg"
           aria-label="Open command palette"

@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { X, ChevronRight } from "lucide-react";
-import { useTabs } from "@/lib/ide/tabs-context";
-import { profile } from "@/data/portfolio";
-import { projects } from "@/data/projects";
-import { posts } from "@/data/blog";
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { X, ChevronRight } from 'lucide-react';
+import { useTabs } from '@/lib/ide/tabs-context';
+import { profile } from '@/data/portfolio';
+import { projects } from '@/data/projects';
+import { posts } from '@/data/blog';
 
-type Line = { kind: "in" | "out"; text: string };
+type Line = { kind: 'in' | 'out'; text: string };
 
 const HELP = `available commands:
   whoami           who is this site about
@@ -18,32 +18,31 @@ const HELP = `available commands:
 
 function runCommand(input: string): string {
   const cmd = input.trim().toLowerCase();
-  if (!cmd) return "";
-  if (cmd === "help") return HELP;
-  if (cmd === "whoami")
+  if (!cmd) return '';
+  if (cmd === 'help') return HELP;
+  if (cmd === 'whoami')
     return `${profile.name} — ${profile.role}\nbased in ${profile.location}. ${profile.tagline}.`;
-  if (cmd.startsWith("projects")) {
+  if (cmd.startsWith('projects')) {
     return projects
       .filter((p) => p.featured)
       .map((p) => `  ${p.file.padEnd(28)} ${p.tagline}`)
-      .join("\n");
+      .join('\n');
   }
-  if (cmd.startsWith("blog"))
-    return posts.map((p) => `  ${p.date}  ${p.title}`).join("\n");
-  if (cmd === "contact")
+  if (cmd.startsWith('blog')) return posts.map((p) => `  ${p.date}  ${p.title}`).join('\n');
+  if (cmd === 'contact')
     return `email:    ${profile.email}\ngithub:   ${profile.github}\nlinkedin: ${profile.linkedin}\ntwitter:  ${profile.twitter}`;
-  if (cmd === "clear") return "__clear__";
-  if (cmd === "sudo make me a sandwich") return "nice try.";
+  if (cmd === 'clear') return '__clear__';
+  if (cmd === 'sudo make me a sandwich') return 'nice try.';
   return `command not found: ${cmd}. type 'help' for options.`;
 }
 
 export function Terminal({ isMobile }: { isMobile?: boolean }) {
   const { terminalOpen, setTerminalOpen } = useTabs();
   const [lines, setLines] = useState<Line[]>([
-    { kind: "out", text: `Welcome to yash-portfolio v1.0.0` },
-    { kind: "out", text: `type 'help' to see what you can do.` },
+    { kind: 'out', text: `Welcome to yash-portfolio v1.0.0` },
+    { kind: 'out', text: `type 'help' to see what you can do.` },
   ]);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -58,12 +57,16 @@ export function Terminal({ isMobile }: { isMobile?: boolean }) {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const out = runCommand(value);
-    if (out === "__clear__") {
+    if (out === '__clear__') {
       setLines([]);
     } else {
-      setLines((prev) => [...prev, { kind: "in", text: value }, ...(out ? [{ kind: "out" as const, text: out }] : [])]);
+      setLines((prev) => [
+        ...prev,
+        { kind: 'in', text: value },
+        ...(out ? [{ kind: 'out' as const, text: out }] : []),
+      ]);
     }
-    setValue("");
+    setValue('');
   };
 
   return (
@@ -73,7 +76,11 @@ export function Terminal({ isMobile }: { isMobile?: boolean }) {
           initial={{ height: 0 }}
           animate={{ height: 240 }}
           exit={{ height: 0 }}
-          transition={isMobile ? { duration: 0.12 } : { type: "spring", stiffness: 500, damping: 35, mass: 0.8 }}
+          transition={
+            isMobile
+              ? { duration: 0.12 }
+              : { type: 'spring', stiffness: 500, damping: 35, mass: 0.8 }
+          }
           className="shrink-0 overflow-hidden border-t border-border bg-background"
         >
           <div className="flex h-8 items-center justify-between border-b border-border bg-sidebar-bg px-3">
@@ -97,7 +104,7 @@ export function Terminal({ isMobile }: { isMobile?: boolean }) {
           >
             {lines.map((l, i) => (
               <div key={i} className="whitespace-pre-wrap">
-                {l.kind === "in" ? (
+                {l.kind === 'in' ? (
                   <span>
                     <span className="text-syntax-tag">yash@portfolio</span>
                     <span className="text-muted-foreground"> ~ </span>
