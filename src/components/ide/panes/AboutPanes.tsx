@@ -1,6 +1,6 @@
-import { skills, education } from "@/data/portfolio";
-import { CommentCaption, EditorContainer, Item, KeywordLabel } from "./editor-shell";
-import { Package, GraduationCap, Star } from "lucide-react";
+import { skills, education } from '@/data/portfolio';
+import { CommentCaption, EditorContainer, Item, KeywordLabel } from './editor-shell';
+import { Package, GraduationCap, Star } from 'lucide-react';
 
 export function SkillsPane() {
   const grouped = skills.reduce<Record<string, typeof skills>>((acc, s) => {
@@ -18,7 +18,8 @@ export function SkillsPane() {
       </Item>
       <Item className="mt-2">
         <CommentCaption>
-          the tools I reach for most often, rated by how comfortable I actually am — not aspirationally.
+          the tools I reach for most often, rated by how comfortable I actually am — not
+          aspirationally.
         </CommentCaption>
       </Item>
 
@@ -47,7 +48,7 @@ export function SkillsPane() {
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
-                          className={`h-3 w-3 ${i < s.level ? "fill-syntax-number text-syntax-number" : "text-muted-foreground/30"}`}
+                          className={`h-3 w-3 ${i < s.level ? 'fill-syntax-number text-syntax-number' : 'text-muted-foreground/30'}`}
                         />
                       ))}
                     </div>

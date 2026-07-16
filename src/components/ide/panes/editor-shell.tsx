@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
-import type { ReactNode } from "react";
+import { motion } from 'motion/react';
+import type { ReactNode } from 'react';
 
 export const staggerContainer = {
   hidden: {},
@@ -10,7 +10,11 @@ export const staggerContainer = {
 
 export const staggerItem = {
   hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 400, damping: 30, mass: 0.8 } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring' as const, stiffness: 400, damping: 30, mass: 0.8 },
+  },
 };
 
 export function EditorContainer({ children }: { children: ReactNode }) {
