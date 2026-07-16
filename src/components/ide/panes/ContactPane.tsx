@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { z } from "zod";
-import { toast } from "sonner";
-import { profile } from "@/data/portfolio";
-import { CommentCaption, EditorContainer, Item, KeywordLabel } from "./editor-shell";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Mail, Github, Linkedin, Twitter, Send } from "lucide-react";
+import { useState } from 'react';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { profile } from '@/data/portfolio';
+import { CommentCaption, EditorContainer, Item, KeywordLabel } from './editor-shell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Mail, Github, Linkedin, Twitter, Send } from 'lucide-react';
 
 const schema = z.object({
-  name: z.string().trim().min(1, "name required").max(80),
-  email: z.string().trim().email("valid email required").max(200),
-  message: z.string().trim().min(4, "at least a few words").max(1500),
+  name: z.string().trim().min(1, 'name required').max(80),
+  email: z.string().trim().email('valid email required').max(200),
+  message: z.string().trim().min(4, 'at least a few words').max(1500),
 });
 
 export function ContactPane() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
 
@@ -37,9 +37,9 @@ export function ContactPane() {
     setTimeout(() => {
       setSending(false);
       toast.success("Message queued — I'll get back within a day or two.");
-      setName("");
-      setEmail("");
-      setMessage("");
+      setName('');
+      setEmail('');
+      setMessage('');
     }, 700);
   };
 
@@ -64,7 +64,7 @@ export function ContactPane() {
         <form onSubmit={submit} className="p-5 font-mono text-[13px]">
           <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 leading-relaxed">
             <span className="text-line-number select-none">1</span>
-            <span>{"{"}</span>
+            <span>{'{'}</span>
 
             <span className="text-line-number select-none">2</span>
             <JsonField
@@ -95,26 +95,39 @@ export function ContactPane() {
             />
 
             <span className="text-line-number select-none">5</span>
-            <span>{"}"}</span>
+            <span>{'}'}</span>
           </div>
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[11px] text-syntax-comment">
-              // usually reply within 24-48h · IST
-            </p>
+            <p className="text-[11px] text-syntax-comment">// usually reply within 24-48h · IST</p>
             <Button type="submit" disabled={sending}>
               <Send className="h-3.5 w-3.5" />
-              {sending ? "sending…" : "send message"}
+              {sending ? 'sending…' : 'send message'}
             </Button>
           </div>
         </form>
       </Item>
 
       <Item className="mt-8 grid gap-3 sm:grid-cols-2">
-        <ContactLink Icon={Mail} label="email" value={profile.email} href={`mailto:${profile.email}`} />
-        <ContactLink Icon={Github} label="github" value="@yash" href={profile.github} />
-        <ContactLink Icon={Linkedin} label="linkedin" value="in/yash" href={profile.linkedin} />
-        <ContactLink Icon={Twitter} label="twitter" value="@yash" href={profile.twitter} />
+        <ContactLink
+          Icon={Mail}
+          label="email"
+          value={profile.email}
+          href={`mailto:${profile.email}`}
+        />
+        <ContactLink Icon={Github} label="github" value="@yashmagar01" href={profile.github} />
+        <ContactLink
+          Icon={Linkedin}
+          label="linkedin"
+          value="in/yash-magar"
+          href={profile.linkedin}
+        />
+        <ContactLink
+          Icon={Twitter}
+          label="twitter"
+          value="@yashmag50534849"
+          href={profile.twitter}
+        />
       </Item>
     </EditorContainer>
   );
@@ -125,7 +138,7 @@ function JsonField({
   value,
   onChange,
   placeholder,
-  type = "text",
+  type = 'text',
   error,
 }: {
   label: string;
