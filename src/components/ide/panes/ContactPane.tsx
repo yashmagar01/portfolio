@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useForm } from '@formspree/react';
+import { useState } from 'react';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { profile } from '@/data/portfolio';
@@ -15,14 +14,14 @@ const schema = z.object({
   message: z.string().trim().min(4, 'at least a few words').max(1500),
 });
 
-const FORMSPREE_ID = 'xkodjwrb';
+const FORMSPREE_URL = 'https://formspree.io/f/xkodjwrb';
 
 export function ContactPane() {
-  const [state, handleSubmit] = useForm(FORMSPREE_ID);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sending, setSending] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,17 +35,30 @@ export function ContactPane() {
       return;
     }
     setErrors({});
-    await handleSubmit(e);
-  };
+    setSending(true);
 
-  useEffect(() => {
-    if (state.succeeded) {
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `Formspree returned ${res.status}`);
+      }
+
       toast.success("Message delivered — I'll get back within a day or two.");
       setName('');
       setEmail('');
       setMessage('');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to send message');
+    } finally {
+      setSending(false);
     }
-  }, [state.succeeded]);
+  };
 
   return (
     <EditorContainer>
@@ -105,9 +117,9 @@ export function ContactPane() {
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <p className="text-[11px] text-syntax-comment">// usually reply within 24-48h · IST</p>
-            <Button type="submit" disabled={state.submitting}>
+            <Button type="submit" disabled={sending}>
               <Send className="h-3.5 w-3.5" />
-              {state.submitting ? 'sending…' : 'send message'}
+              {sending ? 'sending…' : 'send message'}
             </Button>
           </div>
         </form>
