@@ -8,7 +8,7 @@ import { PostNav } from '@/components/blog/PostNav';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { AuthorCard } from '@/components/blog/AuthorCard';
 import { RenderBody } from '@/components/blog/RenderBody';
-import { Calendar, Clock } from 'lucide-react';
+import { ArticleMetadata } from '@/components/blog/ArticleMetadata';
 
 export const Route = createFileRoute('/blog/$slug')({
   loader: ({ params }) => {
@@ -23,10 +23,10 @@ export const Route = createFileRoute('/blog/$slug')({
     return {
       meta: [
         { title: `${post.title} — Yash Magar` },
-        { name: 'description', content: post.excerpt },
+        { name: 'description', content: post.description || post.excerpt },
         { name: 'author', content: 'Yash Ajay Magar' },
         { property: 'og:title', content: post.title },
-        { property: 'og:description', content: post.excerpt },
+        { property: 'og:description', content: post.description || post.excerpt },
         { property: 'og:type', content: 'article' },
         { property: 'og:url', content: url },
         { property: 'og:site_name', content: 'magar.xyz' },
@@ -37,10 +37,13 @@ export const Route = createFileRoute('/blog/$slug')({
         ...post.tags.map((tag) => ({ property: 'article:tag', content: tag })),
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: post.title },
-        { name: 'twitter:description', content: post.excerpt },
+        { name: 'twitter:description', content: post.description || post.excerpt },
         { name: 'twitter:creator', content: '@yashmag50534849' },
       ],
-      links: [{ rel: 'canonical', href: url }],
+      links: [
+        { rel: 'canonical', href: post.canonical || url },
+        ...(post.github ? [{ rel: 'alternate', href: post.github, type: 'text/html' }] : []),
+      ],
       scripts: [
         {
           type: 'application/ld+json',
@@ -48,11 +51,12 @@ export const Route = createFileRoute('/blog/$slug')({
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
             headline: post.title,
-            description: post.excerpt,
+            description: post.description || post.excerpt,
             url: url,
             datePublished: post.date,
             ...(post.updatedDate ? { dateModified: post.updatedDate } : {}),
             keywords: post.tags.join(', '),
+            wordCount: post.wordCount,
             author: {
               '@type': 'Person',
               name: 'Yash Ajay Magar',
@@ -92,16 +96,9 @@ export const Route = createFileRoute('/blog/$slug')({
   ),
 });
 
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString('en-IN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
-
 function PostPage() {
   const { post } = Route.useLoaderData();
+
   const sortedPosts = [...posts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
@@ -117,13 +114,31 @@ function PostPage() {
       {/* Hero */}
       <div className="border-b border-border bg-muted/20">
         <div className="mx-auto max-w-5xl px-4 pb-10 pt-12 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
             <span className="rounded-full bg-muted px-3 py-1 font-mono text-[11px] text-muted-foreground capitalize">
               {post.category.replace('-', ' ')}
             </span>
             {post.featured && (
               <span className="rounded-full bg-primary/10 px-3 py-1 font-mono text-[11px] text-primary">
                 featured
+              </span>
+            )}
+            {post.series && (
+              <span className="rounded-full bg-purple-50 border border-purple-200 px-3 py-1 font-mono text-[11px] text-purple-700">
+                {post.series.name} · Part {post.series.part}
+              </span>
+            )}
+            {post.difficulty && (
+              <span
+                className={`rounded-full border px-3 py-1 font-mono text-[11px] capitalize ${
+                  post.difficulty === 'beginner'
+                    ? 'border-green-200 bg-green-50 text-green-700'
+                    : post.difficulty === 'intermediate'
+                      ? 'border-amber-200 bg-amber-50 text-amber-700'
+                      : 'border-red-200 bg-red-100 text-red-700'
+                }`}
+              >
+                {post.difficulty}
               </span>
             )}
           </div>
@@ -134,22 +149,8 @@ function PostPage() {
             {post.excerpt}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 font-mono text-[12px] text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5" />
-              {formatDate(post.date)}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              {post.readingMinutes} min read
-            </span>
-            <div className="flex gap-2 flex-wrap">
-              {post.tags.map((t) => (
-                <span key={t} className="text-syntax-tag">
-                  #{t}
-                </span>
-              ))}
-            </div>
+          <div className="mt-6">
+            <ArticleMetadata post={post} />
           </div>
         </div>
       </div>
@@ -161,10 +162,8 @@ function PostPage() {
           <article>
             <RenderBody body={post.body} />
 
-            {/* Divider */}
             <hr className="my-12 border-border" />
 
-            {/* Author + share */}
             <div className="space-y-8">
               <ShareRow title={post.title} slug={post.slug} />
               <PostNav prev={prevPost} next={nextPost} />
