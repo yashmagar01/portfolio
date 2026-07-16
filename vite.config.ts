@@ -3,6 +3,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
   plugins: [
@@ -15,6 +16,7 @@ export default defineConfig({
       injectSource: { enabled: true },
     }),
     tanstackStart({ server: { entry: "server" }, router: { routeFileIgnorePattern: '(server|start)\\.ts' } }),
+    nitro(),
     viteReact(),
     tailwindcss(),
   ],
