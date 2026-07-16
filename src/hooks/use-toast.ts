@@ -1,34 +1,32 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 
 export interface Toast {
   id: string;
   title?: string;
   description?: string;
   action?: React.ReactNode;
-  variant?: "default" | "destructive" | "success";
+  variant?: 'default' | 'destructive' | 'success';
   duration?: number;
 }
 
 const TOAST_LIMIT = 5;
 const TOAST_REMOVE_DELAY = 1000;
 
-type ToastAction = 
-  | { type: "ADD_TOAST"; toast: Toast }
-  | { type: "REMOVE_TOAST"; id: string }
-  | { type: "DISMISS_TOAST"; id: string }
-  | { type: "CLEAR_TOASTS" };
+type ToastAction =
+  | { type: 'ADD_TOAST'; toast: Toast }
+  | { type: 'REMOVE_TOAST'; id: string }
+  | { type: 'DISMISS_TOAST'; id: string }
+  | { type: 'CLEAR_TOASTS' };
 
 const reducer = (state: Toast[], action: ToastAction): Toast[] => {
   switch (action.type) {
-    case "ADD_TOAST":
+    case 'ADD_TOAST':
       return [action.toast, ...state].slice(0, TOAST_LIMIT);
-    case "REMOVE_TOAST":
+    case 'REMOVE_TOAST':
       return state.filter((t) => t.id !== action.id);
-    case "DISMISS_TOAST":
-      return state.map((t) =>
-        t.id === action.id ? { ...t, duration: 0 } : t
-      );
-    case "CLEAR_TOASTS":
+    case 'DISMISS_TOAST':
+      return state.map((t) => (t.id === action.id ? { ...t, duration: 0 } : t));
+    case 'CLEAR_TOASTS':
       return [];
     default:
       return state;
@@ -43,25 +41,25 @@ function useToastReducer() {
   }, []);
 
   const addToast = useCallback(
-    (toast: Omit<Toast, "id"> & { id?: string }) => {
+    (toast: Omit<Toast, 'id'> & { id?: string }) => {
       const id = toast.id || Math.random().toString(36).substr(2, 9);
-      dispatch({ type: "ADD_TOAST", toast: { ...toast, id } });
+      dispatch({ type: 'ADD_TOAST', toast: { ...toast, id } });
       return id;
     },
     [dispatch]
   );
 
   const removeToast = useCallback(
-    (id: string) => dispatch({ type: "REMOVE_TOAST", id }),
+    (id: string) => dispatch({ type: 'REMOVE_TOAST', id }),
     [dispatch]
   );
 
   const dismissToast = useCallback(
-    (id: string) => dispatch({ type: "DISMISS_TOAST", id }),
+    (id: string) => dispatch({ type: 'DISMISS_TOAST', id }),
     [dispatch]
   );
 
-  const clearToasts = useCallback(() => dispatch({ type: "CLEAR_TOASTS" }), [dispatch]);
+  const clearToasts = useCallback(() => dispatch({ type: 'CLEAR_TOASTS' }), [dispatch]);
 
   return { toasts, addToast, removeToast, dismissToast, clearToasts };
 }
@@ -91,7 +89,6 @@ export function useToast() {
   };
 }
 
-export function toast(toast: Omit<Toast, "id">) {
+export function toast(toast: Omit<Toast, 'id'>) {
   return { id: Math.random().toString(36).substr(2, 9), ...toast };
 }
-
