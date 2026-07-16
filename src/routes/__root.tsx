@@ -17,7 +17,7 @@ const jsonLd = {
   name: 'Yash Ajay Magar',
   givenName: 'Yash',
   familyName: 'Magar',
-  jobTitle: 'AI Builder, Developer, Diploma Student',
+  jobTitle: 'AI Builder · Developer · Diploma Student',
   description:
     'Portfolio of Yash Ajay Magar — AI enthusiast, full-stack developer, and open-source contributor.',
   url: 'https://magar.xyz',
