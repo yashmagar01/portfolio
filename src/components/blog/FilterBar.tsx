@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, X } from 'lucide-react';
 
 interface FilterBarProps {
-  onSearch: (query: string) => void;
   onCategoryChange: (category: string | null) => void;
   onSortChange: (sort: string) => void;
   onDifficultyChange: (difficulty: string | null) => void;
@@ -13,7 +12,6 @@ interface FilterBarProps {
 }
 
 export function FilterBar({
-  onSearch,
   onCategoryChange,
   onSortChange,
   onDifficultyChange,
@@ -26,20 +24,6 @@ export function FilterBar({
 
   return (
     <div className="space-y-3">
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Search articles..."
-          onChange={(e) => onSearch(e.target.value)}
-          className="w-full rounded-lg border border-border bg-background py-2.5 pl-10 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50 transition-colors"
-        />
-        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground hidden sm:inline">
-          /
-        </kbd>
-      </div>
-
       {/* Filter Toggle */}
       <button
         onClick={() => setShowFilters(!showFilters)}
