@@ -7,6 +7,7 @@ import { AuthorCard } from '@/components/blog/AuthorCard';
 import { SearchDialog } from '@/components/blog/SearchDialog';
 import { FilterBar } from '@/components/blog/FilterBar';
 import { ArchiveView } from '@/components/blog/ArchiveView';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import {
   Calendar,
   Clock,
@@ -14,10 +15,8 @@ import {
   TrendingUp,
   Sparkles,
   BookOpen,
-  Tag,
   Zap,
   ArrowRight,
-  Flame,
   FileText,
 } from 'lucide-react';
 
@@ -81,11 +80,12 @@ type ViewMode = 'grid' | 'archive';
 
 function BlogIndexPage() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('newest');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+  useKeyboardShortcuts({ onSearch: () => setSearchOpen(true) });
 
   const allCategories = useMemo(
     () => Array.from(new Set(posts.map((p) => p.category))),
@@ -113,16 +113,6 @@ function BlogIndexPage() {
     if (difficultyFilter) {
       result = result.filter((p) => p.difficulty === difficultyFilter);
     }
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.excerpt.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.includes(q)) ||
-          p.category.includes(q),
-      );
-    }
 
     switch (sortBy) {
       case 'oldest':
@@ -140,7 +130,7 @@ function BlogIndexPage() {
     }
 
     return result;
-  }, [categoryFilter, difficultyFilter, searchQuery, sortBy]);
+  }, [categoryFilter, difficultyFilter, sortBy]);
 
   const featured = useMemo(() => filtered.filter((p) => p.featured), [filtered]);
   const latest = useMemo(
@@ -189,7 +179,6 @@ function BlogIndexPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <FilterBar
-              onSearch={setSearchQuery}
               onCategoryChange={setCategoryFilter}
               onSortChange={setSortBy}
               onDifficultyChange={setDifficultyFilter}
@@ -231,15 +220,10 @@ function BlogIndexPage() {
           <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
             {/* Main content */}
             <div>
-              {/* Search active indicator */}
-              {(searchQuery || categoryFilter || difficultyFilter) && (
+              {/* Filter active indicator */}
+              {(categoryFilter || difficultyFilter) && (
                 <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-[12px] text-muted-foreground">
                   <span>Filtered</span>
-                  {searchQuery && (
-                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px]">
-                      "{searchQuery}"
-                    </span>
-                  )}
                   {categoryFilter && (
                     <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] capitalize">
                       {categoryFilter}
@@ -257,7 +241,7 @@ function BlogIndexPage() {
               )}
 
               {/* Featured */}
-              {featured.length > 0 && !searchQuery && !categoryFilter && !difficultyFilter && (
+              {featured.length > 0 && !categoryFilter && !difficultyFilter && (
                 <section className="mb-10">
                   <div className="mb-5 flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-primary" />
@@ -275,7 +259,7 @@ function BlogIndexPage() {
               )}
 
               {/* Latest */}
-              {latest.length > 0 && !searchQuery && !categoryFilter && !difficultyFilter && (
+              {latest.length > 0 && !categoryFilter && !difficultyFilter && (
                 <section className="mb-8">
                   <div className="mb-5 flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-primary" />
@@ -293,7 +277,7 @@ function BlogIndexPage() {
               )}
 
               {/* Filtered results */}
-              {(searchQuery || categoryFilter || difficultyFilter) && filtered.length > 0 && (
+              {(categoryFilter || difficultyFilter) && filtered.length > 0 && (
                 <section>
                   <div className="space-y-4">
                     {filtered.map((post) => (
@@ -422,9 +406,9 @@ function BlogIndexPage() {
 }
 
 const difficultyColors: Record<string, string> = {
-  beginner: 'border-green-200 bg-green-50 text-green-700',
-  intermediate: 'border-amber-200 bg-amber-50 text-amber-700',
-  advanced: 'border-red-200 bg-red-100 text-red-700',
+  beginner: 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300',
+  intermediate: 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300',
+  advanced: 'border-red-200 dark:border-red-800 bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300',
 };
 
 function PostCard({ post, featured }: { post: Post; featured?: boolean }) {
@@ -455,7 +439,7 @@ function PostCard({ post, featured }: { post: Post; featured?: boolean }) {
           </span>
         )}
         {post.series && (
-          <span className="rounded-full bg-purple-50 border border-purple-200 px-2.5 py-0.5 font-mono text-[10px] text-purple-700">
+          <span className="rounded-full bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800 px-2.5 py-0.5 font-mono text-[10px] text-purple-700 dark:text-purple-300">
             {post.series.part}/{post.series.total}
           </span>
         )}

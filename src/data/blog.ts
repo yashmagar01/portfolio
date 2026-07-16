@@ -100,6 +100,10 @@ Let me be specific, because vague claims about "catching up" are useless.
 
 Now, benchmarks are not the whole picture. They are gameable, narrow, and often poor proxies for real-world usefulness. I have used DeepSeek-R1, Qwen 2.5, and GLM-4 on actual projects — building quiz generation logic for QuizForge, structuring data extraction for College Sahayak, reviewing architecture decisions. My honest assessment: for structured reasoning tasks, DeepSeek-R1 is genuinely competitive with o1. For code generation with clear specs, Qwen 2.5 Coder is as good as GPT-4 Turbo and sometimes better at understanding context across large files. For anything requiring Chinese cultural or linguistic nuance, GLM-4 is in a different league from Western models.
 
+:::info
+Benchmarks like MMLU, HumanEval, and AIME measure narrow slices of capability. A model that scores highly on these may still fail on real-world tasks that require consistent multi-step reasoning. Always test on your actual use case before committing to a model.
+:::
+
 ## Why open source is the real story
 
 The benchmark numbers matter, but the open-weight release strategy is what makes this a structural shift, not just a temporary catch-up.
@@ -116,6 +120,10 @@ Open-source models from any lab — Chinese or American — reduce that dependen
 
 There is an uncomfortable irony in US semiconductor export controls. By restricting NVIDIA GPU exports to China, the policy intended to slow Chinese AI development. The effect has been to force Chinese labs to do more with less — to optimise architectures, to run leaner training runs, to develop inference techniques that require less compute. DeepSeek-R1's training cost a small fraction of what GPT-4 reportedly cost. Part of that is clever architecture. Part of it is that they had to be clever because they could not just throw money and H100s at the problem.
 
+:::warning
+Export controls can create second-order effects that work against their intended purpose. Constraining compute access has historically forced innovation in algorithmic efficiency — a dynamic worth considering when evaluating the long-term impact of any technology restriction.
+:::
+
 I am not a geopolitics expert, and I will not pretend the chip controls are simply counterproductive. The reality is complicated — controlling cutting-edge compute does create bottlenecks for certain classes of research. But the idea that you can simply deny a country of 1.4 billion people with a centuries-long tradition of mathematics and engineering the ability to build competitive AI systems is, at this point, clearly not how it works.
 
 The more interesting question is what productive co-existence looks like. CERN is the obvious model — a genuinely international scientific collaboration where the work of one institution immediately benefits everyone else, including geopolitical rivals. AI research does not look like that right now. It looks like a race with escalating classification of research and increasing distrust between labs in different countries. That is not good for science, and it is not good for anyone trying to build things using the best available tools.
@@ -123,6 +131,10 @@ The more interesting question is what productive co-existence looks like. CERN i
 In the meantime, as a developer: the best model for your task is the best model for your task. If DeepSeek-R1 solves a reasoning problem better than o1 and costs 10x less to run, use DeepSeek-R1. The geopolitical anxieties of your government are not relevant to your pull request.
 
 ## What this means for developers right now
+
+:::tip
+The practical takeaway is not about geopolitics — it is about capability. The best model for your task is the model that solves it most effectively, regardless of where it was trained. Evaluate on results, not on narrative.
+:::
 
 Here is the practical synthesis, because this piece should end with something you can actually act on.
 

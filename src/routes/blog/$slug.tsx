@@ -35,6 +35,7 @@ export const Route = createFileRoute('/blog/$slug')({
         { property: 'og:description', content: post.description || post.excerpt },
         { property: 'og:type', content: 'article' },
         { property: 'og:url', content: url },
+        { property: 'og:image', content: post.coverImage || '/og-image.svg' },
         { property: 'og:site_name', content: 'magar.xyz' },
         { property: 'article:published_time', content: post.date },
         ...(post.updatedDate
@@ -44,6 +45,7 @@ export const Route = createFileRoute('/blog/$slug')({
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: post.title },
         { name: 'twitter:description', content: post.description || post.excerpt },
+        { name: 'twitter:image', content: post.coverImage || '/og-image.svg' },
         { name: 'twitter:creator', content: '@yashmag50534849' },
       ],
       links: [
@@ -146,7 +148,7 @@ function PostPage() {
               </span>
             )}
             {post.series && (
-              <span className="rounded-full bg-purple-50 border border-purple-200 px-3 py-1 font-mono text-[11px] text-purple-700">
+              <span className="rounded-full bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800 px-3 py-1 font-mono text-[11px] text-purple-700 dark:text-purple-300">
                 {post.series.name} · Part {post.series.part}
               </span>
             )}
@@ -154,10 +156,10 @@ function PostPage() {
               <span
                 className={`rounded-full border px-3 py-1 font-mono text-[11px] capitalize ${
                   post.difficulty === 'beginner'
-                    ? 'border-green-200 bg-green-50 text-green-700'
+                    ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300'
                     : post.difficulty === 'intermediate'
-                      ? 'border-amber-200 bg-amber-50 text-amber-700'
-                      : 'border-red-200 bg-red-100 text-red-700'
+                      ? 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300'
+                      : 'border-red-200 dark:border-red-800 bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300'
                 }`}
               >
                 {post.difficulty}
