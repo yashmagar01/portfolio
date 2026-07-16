@@ -1,115 +1,98 @@
-# yash ajay magar — Portfolio
+# Yash Ajay Magar — Portfolio
 
-A VS Code-inspired personal portfolio and digital workspace for **yash ajay magar** — AI journalist, full-stack developer, and builder of practical AI-driven tools.
+A VS Code-inspired personal portfolio built as an interactive IDE shell — with an explorer sidebar, tab strip, command palette, and status bar.
 
 > **Live site:** [magar.xyz](https://magar.xyz)
 
 ---
 
-## 🧠 About
+## About
 
-This portfolio is built as a VS Code 2025-style interface — complete with an explorer sidebar, tab strip, command-center title bar, and status bar — serving as both a portfolio and a content hub.
+This portfolio is built as a VS Code 2025-style interface — complete with an explorer sidebar, tab strip, command-center title bar, and status bar — serving as both a portfolio and a content hub for Yash Ajay Magar: AI enthusiast, full-stack developer, and diploma student.
 
 **Sections:**
-- 🏠 **Home** — Hero, featured projects, connect links
-- 👤 **About** — Bio, skills, GitHub stats
-- 📄 **Resume** — Full resume with PDF download
-- 🚀 **Projects** — The Future You, Persona, Generation Tools
-- 📺 **Vlogs** — Video content (coming soon)
-- ✉️ **Contact** — Email and social links
+
+- 🏠 **README** — Home / about me
+- 🛠️ **Skills** — Languages, frameworks, and tools
+- 🎓 **Education** — Academic background
+- 🚀 **Projects** — Featured work + archive
+- 📝 **Blog** — Essays and notes *(coming soon)*
+- 🎬 **Vlogs** — Short-form video *(coming soon)*
+- ✉️ **Contact** — Message form + social links
 - 🔍 **Search** — Full-text search across all content
-- 🏷️ **Tags** — Browse content by topic
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **[Astro](https://astro.build)** — Static site generator (MPA, content-focused)
-- **[React](https://react.dev)** — Interactive components (Explorer sidebar, search)
-- **[Tailwind CSS](https://tailwindcss.com)** — Utility-first styling
-- **[MDX](https://mdxjs.com)** — Markdown + JSX for rich content pages
-- **[Lucide Icons](https://lucide.dev)** — VS Code-style icons
-- **[Inter + JetBrains Mono](https://fonts.google.com)** — Typography
+| Layer | Technology |
+|---|---|
+| Framework | [TanStack Start](https://tanstack.com/start) (React Router v7 + SSR) |
+| UI | [React 19](https://react.dev) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com) |
+| Language | [TypeScript](https://www.typescriptlang.org) |
+| Animations | [Motion](https://motion.dev) (framer-motion v11+) |
+| Components | [shadcn/ui](https://ui.shadcn.com) |
+| Icons | [Lucide React](https://lucide.dev) |
+| Typography | Inter + JetBrains Mono (Google Fonts) |
+| Deployment | Cloudflare Workers (via TanStack Start SSR adapter) |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ```bash
 # Install dependencies
-pnpm install
+npm install
 
-# Start dev server
-pnpm run dev
+# Start development server
+npm run dev
 
 # Build for production
-pnpm run build
+npm run build
 ```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
-├── components/          # VS Code UI components
-│   ├── TitleBar.astro   # Command-center header bar
-│   ├── ActivityBar.astro# Left icon nav bar
-│   ├── Explorer.tsx     # File tree sidebar
-│   ├── EditorShell.astro# Tab strip + content area
-│   ├── StatusBar.astro  # Bottom status bar
-│   └── RightSidebar.tsx # Outline, tags, related
-├── content/docs/        # All portfolio content (Markdown/MDX)
-│   ├── welcome.md       # Homepage hero
-│   ├── about.mdx        # About page
-│   ├── resume.md        # Resume page
-│   ├── projects/        # Projects
-│   ├── vlogs/           # Video content
-│   └── contact.md       # Contact
-├── layouts/             # Astro layout wrappers
-├── pages/               # Routes & API endpoints
-└── styles/              # Global CSS + theme system
+├── components/
+│   ├── ide/              # VS Code shell components
+│   │   ├── ActivityBar.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── TabsBar.tsx
+│   │   ├── StatusBar.tsx
+│   │   ├── TitleBar.tsx
+│   │   ├── Terminal.tsx
+│   │   ├── Workspace.tsx
+│   │   └── panes/        # Content panes per section
+│   └── ui/               # shadcn/ui primitives
+├── data/                 # Portfolio content as TypeScript data
+│   ├── portfolio.ts      # Profile, skills, education
+│   ├── projects.ts       # Featured + archived projects
+│   ├── blog.ts           # Blog posts
+│   └── vlogs.ts          # Video logs
+├── routes/               # TanStack Start file-based routes
+│   ├── __root.tsx        # Root shell + global meta
+│   └── index.tsx         # Main IDE workspace route
+├── lib/                  # Utilities and context
+└── styles.css            # Global CSS + Tailwind v4 theme
 ```
 
 ---
 
-## 🎨 Themes
+## Connect
 
-The site supports 10+ themes — Dark (default), Light, Monokai, Dracula, Cyberpunk, Solarized Dark/Light, Great Wave, Matrix, and System. Accessible via the Settings icon in the activity bar.
-
----
-
-## 📝 Content
-
-Content is driven by Markdown/MDX files in `src/content/docs/`. Each file uses frontmatter:
-
-```yaml
----
-title: Page Title
-date: '2026-06-16'
-tags: [ai, web, developer]
-summary: Brief description for SEO and cards
-related:
-  - other-page.md
-tabs:
-  - label: Live Demo
-    href: https://example.com
----
-```
-
----
-
-## 📜 Credits
-
-> This portfolio is built on top of the original VS Code-themed portfolio codebase by **[Rody Davis](https://rodydavis.com)**.
->
-> Original repository: [github.com/rodydavis/rodydavis](https://github.com/rodydavis/rodydavis)
->
-> The structure, VS Code shell layout, component architecture, theme system, and content routing patterns are inspired by and derived from Rody Davis's original work. Thank you for open-sourcing such a great foundation.
+- **GitHub:** [github.com/yashmagar01](https://github.com/yashmagar01)
+- **LinkedIn:** [linkedin.com/in/yash-magar](https://www.linkedin.com/in/yash-magar/)
+- **X / Twitter:** [x.com/yashmag50534849](https://x.com/yashmag50534849)
+- **Email:** [yashajaymagar10@gmail.com](mailto:yashajaymagar10@gmail.com)
 
 ---
 
 <p align="center">
-  <i>"Quietly building. Slowly mastering. Eventually leading."</i><br/>
-  <b>— yash ajay magar</b>
+  <i>"Shipping software from a college hostel room."</i><br/>
+  <b>— Yash Ajay Magar</b>
 </p>
