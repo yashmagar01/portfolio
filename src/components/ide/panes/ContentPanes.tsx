@@ -2,8 +2,9 @@ import { useState, type ReactNode } from 'react';
 import { posts, type Post } from '@/data/blog';
 import { vlogs } from '@/data/vlogs';
 import { CommentCaption, EditorContainer, Item, KeywordLabel } from './editor-shell';
-import { Calendar, Clock, Play, FileText, Video } from 'lucide-react';
+import { Calendar, Clock, Play, FileText, Video, ExternalLink, Youtube } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import { useTabs } from '@/lib/ide/tabs-context';
 
 function formatDate(d: string) {
@@ -81,14 +82,27 @@ function renderInline(text: string) {
 }
 
 export function BlogIndexPane() {
-  const { open } = useTabs();
   return (
     <EditorContainer>
       <Item>
         <KeywordLabel># blog/</KeywordLabel>
       </Item>
-      <Item className="mt-3">
-        <h1 className="text-3xl font-semibold tracking-tight">Writing</h1>
+      <Item className="mt-3 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Writing</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {posts.length} {posts.length === 1 ? 'post' : 'posts'} published
+          </p>
+        </div>
+        <a
+          href="/blog"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 font-mono text-[11px] text-primary transition-colors hover:bg-primary/10"
+        >
+          <ExternalLink className="h-3 w-3" />
+          Open blog
+        </a>
       </Item>
       <Item className="mt-2">
         <CommentCaption>essays, notes, and things I've figured out along the way.</CommentCaption>
@@ -115,15 +129,10 @@ export function BlogIndexPane() {
         <div className="mt-8 space-y-2">
           {posts.map((p) => (
             <Item key={p.slug}>
-              <button
-                onClick={() =>
-                  open({
-                    id: `blog/${p.slug}`,
-                    label: p.file,
-                    path: `blog/${p.file}`,
-                    kind: 'file',
-                  })
-                }
+              <a
+                href={`/blog/${p.slug}`}
+                target="_blank"
+                rel="noreferrer"
                 className="group block w-full rounded-lg border border-transparent p-4 text-left transition-all hover:border-primary/30 hover:bg-hover"
               >
                 <div className="flex items-baseline justify-between gap-3">
@@ -147,8 +156,12 @@ export function BlogIndexPane() {
                       </span>
                     ))}
                   </div>
+                  <span className="ml-auto flex items-center gap-1 text-primary/60">
+                    <ExternalLink className="h-2.5 w-2.5" />
+                    read
+                  </span>
                 </div>
-              </button>
+              </a>
             </Item>
           ))}
         </div>
@@ -232,17 +245,42 @@ export function VlogsIndexPane() {
 
       {vlogs.length === 0 ? (
         <Item className="mt-8">
-          <div className="rounded-xl border border-border bg-muted/40 p-8 text-center">
-            <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary">
-              <Video className="h-6 w-6" strokeWidth={1.6} />
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            {/* Recording indicator strip */}
+            <div className="flex items-center gap-2.5 border-b border-border bg-muted/40 px-4 py-2.5">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                rec · standby
+              </span>
+              <Youtube className="ml-auto h-4 w-4 text-muted-foreground/50" />
             </div>
-            <h2 className="text-lg font-semibold">Video logs coming soon</h2>
-            <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
-              Short films from the desk. Process, life, occasional rants.
-            </p>
-            <div className="mt-6 rounded-lg border border-border bg-background/60 p-4 text-left font-mono text-[12px] text-muted-foreground">
-              <span className="text-syntax-comment">// </span>
-              No videos recorded yet. Subscribe for updates.
+
+            <div className="p-8">
+              <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary">
+                <Video className="h-6 w-6" strokeWidth={1.6} />
+              </div>
+              <h2 className="text-lg font-semibold text-center">First video is in the edit bay.</h2>
+              <p className="mt-3 text-sm text-muted-foreground text-center max-w-sm mx-auto leading-relaxed">
+                I film the build process — building real software from a hostel room, the wins, the
+                debugging sessions that go nowhere at 2am, the shipping moments. Coming soon.
+              </p>
+
+              <div className="mt-6 flex justify-center">
+                <a
+                  href={`mailto:${"yashajaymagar10@gmail.com"}?subject=Notify%20me%20when%20vlogs%20drop`}
+                  className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+                >
+                  <span>Notify me when they drop</span>
+                </a>
+              </div>
+
+              <div className="mt-6 rounded-lg border border-border bg-background/60 p-4 text-left font-mono text-[12px] text-muted-foreground">
+                <span className="text-syntax-comment">// </span>
+                No videos uploaded yet. Subscribe on YouTube for updates.
+              </div>
             </div>
           </div>
         </Item>
