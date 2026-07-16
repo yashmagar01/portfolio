@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from '@formspree/react';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { profile } from '@/data/portfolio';
@@ -14,14 +15,16 @@ const schema = z.object({
   message: z.string().trim().min(4, 'at least a few words').max(1500),
 });
 
+const FORMSPREE_ID = 'xkodjwrb';
+
 export function ContactPane() {
+  const [state, handleSubmit] = useForm(FORMSPREE_ID);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [sending, setSending] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = schema.safeParse({ name, email, message });
     if (!parsed.success) {
@@ -33,15 +36,17 @@ export function ContactPane() {
       return;
     }
     setErrors({});
-    setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      toast.success("Message queued — I'll get back within a day or two.");
+    await handleSubmit(e);
+  };
+
+  useEffect(() => {
+    if (state.succeeded) {
+      toast.success("Message delivered — I'll get back within a day or two.");
       setName('');
       setEmail('');
       setMessage('');
-    }, 700);
-  };
+    }
+  }, [state.succeeded]);
 
   return (
     <EditorContainer>
@@ -100,9 +105,9 @@ export function ContactPane() {
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <p className="text-[11px] text-syntax-comment">// usually reply within 24-48h · IST</p>
-            <Button type="submit" disabled={sending}>
+            <Button type="submit" disabled={state.submitting}>
               <Send className="h-3.5 w-3.5" />
-              {sending ? 'sending…' : 'send message'}
+              {state.submitting ? 'sending…' : 'send message'}
             </Button>
           </div>
         </form>
