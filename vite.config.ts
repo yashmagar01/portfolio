@@ -19,7 +19,7 @@ export default defineConfig({
       server: { entry: 'server' },
       router: { routeFileIgnorePattern: '(server|start)\\.ts' },
     }),
-    nitro(),
+    nitro({ preset: 'vercel' }),
     viteReact(),
     tailwindcss(),
   ],
