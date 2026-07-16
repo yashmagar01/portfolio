@@ -1,14 +1,57 @@
+export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
+export type ArticleType =
+  | 'opinion'
+  | 'tutorial'
+  | 'research'
+  | 'architecture'
+  | 'case-study'
+  | 'open-source'
+  | 'career'
+  | 'learning';
+export type Category =
+  | 'ai'
+  | 'programming'
+  | 'backend'
+  | 'open-source'
+  | 'career'
+  | 'research'
+  | 'web'
+  | 'databases'
+  | 'system-design'
+  | 'productivity';
+
 export interface Post {
   slug: string;
   file: string;
   title: string;
+  description: string;
   date: string;
   updatedDate?: string;
   excerpt: string;
   tags: string[];
-  category: 'ai' | 'web-dev' | 'career' | 'opinion' | 'open-source';
+  category: string;
+  articleType: ArticleType;
+  difficulty: Difficulty;
   readingMinutes: number;
+  wordCount: number;
   featured?: boolean;
+  draft?: boolean;
+  coverImage?: string;
+  canonical?: string;
+  series?: {
+    name: string;
+    part: number;
+    total: number;
+  };
+  github?: string;
+  demo?: string;
+  project?: string;
+  repository?: string;
+  language?: string;
+  status?: 'draft' | 'published' | 'updated' | 'major-revision';
+  license?: string;
+  relatedPosts?: string[];
+  relatedProjects?: string[];
   body: string;
 }
 
@@ -17,12 +60,16 @@ export const posts: Post[] = [
     slug: 'america-vs-china-ai',
     file: 'america-vs-china-ai.md',
     title: 'The Quiet Race: How Chinese AI Models Are Catching Up',
+    description: '',
     date: '2025-07-10',
     excerpt:
       'GLM, DeepSeek, Qwen — open-source models out of China are closing the gap on GPT-4 and Claude faster than most people realise. Here is what the benchmarks actually say, and what it means for developers right now.',
     tags: ['ai', 'technology', 'geopolitics', 'open-source'],
     category: 'ai',
+    articleType: 'opinion',
+    difficulty: 'beginner',
     readingMinutes: 11,
+    wordCount: 0,
     featured: true,
     body: `# The Quiet Race: How Chinese AI Models Are Catching Up
 
@@ -90,12 +137,16 @@ The race is not quiet anymore. Pay attention.`,
     slug: 'how-people-think-about-ai',
     file: 'how-people-think-about-ai.md',
     title: 'Four Ways People Think About AI — And One That Actually Makes Sense',
+    description: '',
     date: '2025-07-14',
     excerpt:
       'AI builders, AI deniers, AI fearers, and people who just use it. Here is how I map the landscape in mid-2025, and why I think the productivity unlock is still massively underestimated — including by the people building the tools.',
     tags: ['ai', 'opinion', 'productivity', 'career'],
     category: 'opinion',
+    articleType: 'opinion',
+    difficulty: 'beginner',
     readingMinutes: 12,
+    wordCount: 0,
     featured: true,
     body: `# Four Ways People Think About AI — And One That Actually Makes Sense
 
