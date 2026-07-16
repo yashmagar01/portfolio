@@ -12,7 +12,7 @@ export interface Skill {
 export const profile = {
   name: 'Yash Ajay Magar',
   handle: '@yashmagar',
-  role: 'AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+  role: 'AI Builder · Developer · Diploma Student',
   location: 'Pune, India',
   tagline: 'shipping software from a college hostel room',
   email: 'yashajaymagar10@gmail.com',
@@ -32,7 +32,7 @@ export const education = [
     school: 'Government Polytechnic Awasari',
     program: 'Diploma in Computer Engineering',
     period: '2023 — Present',
-    detail: 'Currently in third year. Focus on data structures, web systems, and applied projects.',
+    detail: 'Currently in third year. Focus on DSA, AI systems, and Open source contributions.',
   },
   {
     school: 'New English School Maan',
