@@ -1,16 +1,16 @@
-import { useState, type ReactNode } from "react";
-import { posts, type Post } from "@/data/blog";
-import { vlogs } from "@/data/vlogs";
-import { CommentCaption, EditorContainer, Item, KeywordLabel } from "./editor-shell";
-import { Calendar, Clock, Play } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useTabs } from "@/lib/ide/tabs-context";
+import { useState, type ReactNode } from 'react';
+import { posts, type Post } from '@/data/blog';
+import { vlogs } from '@/data/vlogs';
+import { CommentCaption, EditorContainer, Item, KeywordLabel } from './editor-shell';
+import { Calendar, Clock, Play, FileText, Video } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useTabs } from '@/lib/ide/tabs-context';
 
 function formatDate(d: string) {
   return new Date(d).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 }
 
@@ -20,29 +20,29 @@ function RenderBody({ body }: { body: string }) {
   return (
     <div className="prose-editor">
       {blocks.map((block, i) => {
-        if (block.startsWith("# ")) {
+        if (block.startsWith('# ')) {
           return <h1 key={i}>{block.slice(2)}</h1>;
         }
-        if (block.startsWith("## ")) {
+        if (block.startsWith('## ')) {
           return <h2 key={i}>{block.slice(3)}</h2>;
         }
-        if (block.startsWith("### ")) {
+        if (block.startsWith('### ')) {
           return <h3 key={i}>{block.slice(4)}</h3>;
         }
-        if (/^\s*[-*]\s/m.test(block) && block.split("\n").every((l) => /^\s*[-*]\s/.test(l))) {
+        if (/^\s*[-*]\s/m.test(block) && block.split('\n').every((l) => /^\s*[-*]\s/.test(l))) {
           return (
             <ul key={i}>
-              {block.split("\n").map((line, j) => (
-                <li key={j}>{renderInline(line.replace(/^\s*[-*]\s/, ""))}</li>
+              {block.split('\n').map((line, j) => (
+                <li key={j}>{renderInline(line.replace(/^\s*[-*]\s/, ''))}</li>
               ))}
             </ul>
           );
         }
-        if (/^\s*\d+\.\s/m.test(block) && block.split("\n").every((l) => /^\s*\d+\.\s/.test(l))) {
+        if (/^\s*\d+\.\s/m.test(block) && block.split('\n').every((l) => /^\s*\d+\.\s/.test(l))) {
           return (
             <ol key={i}>
-              {block.split("\n").map((line, j) => (
-                <li key={j}>{renderInline(line.replace(/^\s*\d+\.\s/, ""))}</li>
+              {block.split('\n').map((line, j) => (
+                <li key={j}>{renderInline(line.replace(/^\s*\d+\.\s/, ''))}</li>
               ))}
             </ol>
           );
@@ -56,20 +56,24 @@ function RenderBody({ body }: { body: string }) {
 function renderInline(text: string) {
   // handle **bold**, *italic*, `code`, [label](url)
   const parts: ReactNode[] = [];
-  const regex =
-    /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
+  const regex = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
   let last = 0;
   let match: RegExpExecArray | null;
   let k = 0;
   while ((match = regex.exec(text)) !== null) {
     if (match.index > last) parts.push(text.slice(last, match.index));
     const token = match[0];
-    if (token.startsWith("**")) parts.push(<strong key={k++}>{token.slice(2, -2)}</strong>);
-    else if (token.startsWith("`")) parts.push(<code key={k++}>{token.slice(1, -1)}</code>);
-    else if (token.startsWith("[")) {
+    if (token.startsWith('**')) parts.push(<strong key={k++}>{token.slice(2, -2)}</strong>);
+    else if (token.startsWith('`')) parts.push(<code key={k++}>{token.slice(1, -1)}</code>);
+    else if (token.startsWith('[')) {
       const m = /\[([^\]]+)\]\(([^)]+)\)/.exec(token);
-      if (m) parts.push(<a key={k++} href={m[2]} target="_blank" rel="noreferrer">{m[1]}</a>);
-    } else if (token.startsWith("*")) parts.push(<em key={k++}>{token.slice(1, -1)}</em>);
+      if (m)
+        parts.push(
+          <a key={k++} href={m[2]} target="_blank" rel="noreferrer">
+            {m[1]}
+          </a>
+        );
+    } else if (token.startsWith('*')) parts.push(<em key={k++}>{token.slice(1, -1)}</em>);
     last = match.index + token.length;
   }
   if (last < text.length) parts.push(text.slice(last));
@@ -90,46 +94,72 @@ export function BlogIndexPane() {
         <CommentCaption>essays, notes, and things I've figured out along the way.</CommentCaption>
       </Item>
 
-      <div className="mt-8 space-y-2">
-        {posts.map((p) => (
-          <Item key={p.slug}>
-            <button
-              onClick={() =>
-                open({ id: `blog/${p.slug}`, label: p.file, path: `blog/${p.file}`, kind: "file" })
-              }
-              className="group block w-full rounded-lg border border-transparent p-4 text-left transition-all hover:border-primary/30 hover:bg-hover"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                  {p.title}
-                </h3>
-                <span className="font-mono text-[11px] text-muted-foreground shrink-0">
-                  {formatDate(p.date)}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">{p.excerpt}</p>
-              <div className="mt-3 flex items-center gap-3 font-mono text-[11px] text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {p.readingMinutes} min
-                </span>
-                <div className="flex gap-1">
-                  {p.tags.map((t) => (
-                    <span key={t} className="text-syntax-tag">#{t}</span>
-                  ))}
+      {posts.length === 0 ? (
+        <Item className="mt-8">
+          <div className="rounded-xl border border-border bg-muted/40 p-8 text-center">
+            <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary">
+              <FileText className="h-6 w-6" strokeWidth={1.6} />
+            </div>
+            <h2 className="text-lg font-semibold">Writing coming soon</h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
+              Essays, notes, and things I've figured out along the way — once I start writing them
+              down.
+            </p>
+            <div className="mt-6 rounded-lg border border-border bg-background/60 p-4 text-left font-mono text-[12px] text-muted-foreground">
+              <span className="text-syntax-comment">// </span>
+              This space is intentionally left blank... for now.
+            </div>
+          </div>
+        </Item>
+      ) : (
+        <div className="mt-8 space-y-2">
+          {posts.map((p) => (
+            <Item key={p.slug}>
+              <button
+                onClick={() =>
+                  open({
+                    id: `blog/${p.slug}`,
+                    label: p.file,
+                    path: `blog/${p.file}`,
+                    kind: 'file',
+                  })
+                }
+                className="group block w-full rounded-lg border border-transparent p-4 text-left transition-all hover:border-primary/30 hover:bg-hover"
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                    {p.title}
+                  </h3>
+                  <span className="font-mono text-[11px] text-muted-foreground shrink-0">
+                    {formatDate(p.date)}
+                  </span>
                 </div>
-              </div>
-            </button>
-          </Item>
-        ))}
-      </div>
+                <p className="mt-1 text-sm text-muted-foreground">{p.excerpt}</p>
+                <div className="mt-3 flex items-center gap-3 font-mono text-[11px] text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {p.readingMinutes} min
+                  </span>
+                  <div className="flex gap-1">
+                    {p.tags.map((t) => (
+                      <span key={t} className="text-syntax-tag">
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </button>
+            </Item>
+          ))}
+        </div>
+      )}
     </EditorContainer>
   );
 }
 
 export function PostPane({ slug }: { slug: string }) {
   const post = posts.find((p) => p.slug === slug);
-  const [view, setView] = useState<"rendered" | "raw">("rendered");
+  const [view, setView] = useState<'rendered' | 'raw'>('rendered');
   if (!post) return null;
   return (
     <EditorContainer>
@@ -137,19 +167,19 @@ export function PostPane({ slug }: { slug: string }) {
         <KeywordLabel># blog/{post.file}</KeywordLabel>
         <div className="flex items-center gap-1 rounded-md border border-border p-0.5 font-mono text-[11px]">
           <button
-            onClick={() => setView("rendered")}
+            onClick={() => setView('rendered')}
             className={cn(
-              "rounded px-2 py-0.5",
-              view === "rendered" ? "bg-selection text-primary" : "text-muted-foreground",
+              'rounded px-2 py-0.5',
+              view === 'rendered' ? 'bg-selection text-primary' : 'text-muted-foreground'
             )}
           >
             rendered
           </button>
           <button
-            onClick={() => setView("raw")}
+            onClick={() => setView('raw')}
             className={cn(
-              "rounded px-2 py-0.5",
-              view === "raw" ? "bg-selection text-primary" : "text-muted-foreground",
+              'rounded px-2 py-0.5',
+              view === 'raw' ? 'bg-selection text-primary' : 'text-muted-foreground'
             )}
           >
             raw
@@ -166,13 +196,15 @@ export function PostPane({ slug }: { slug: string }) {
         </span>
         <div className="flex gap-1">
           {post.tags.map((t) => (
-            <span key={t} className="text-syntax-tag">#{t}</span>
+            <span key={t} className="text-syntax-tag">
+              #{t}
+            </span>
           ))}
         </div>
       </Item>
 
       <Item className="mt-4">
-        {view === "rendered" ? (
+        {view === 'rendered' ? (
           <RenderBody body={post.body} />
         ) : (
           <pre className="ide-scrollbar overflow-x-auto rounded-md bg-muted p-4 font-mono text-[12.5px] leading-relaxed">
@@ -198,44 +230,67 @@ export function VlogsIndexPane() {
         <CommentCaption>short films from the desk. process, life, occasional rants.</CommentCaption>
       </Item>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        {vlogs.map((v) => (
-          <Item key={v.slug}>
-            <button
-              onClick={() =>
-                open({ id: `vlogs/${v.slug}`, label: v.file, path: `vlogs/${v.file}`, kind: "file" })
-              }
-              className="group block w-full overflow-hidden rounded-lg border border-border bg-card text-left transition-all hover:border-primary/40 hover:shadow-panel"
-            >
-              <div className="relative aspect-video overflow-hidden bg-muted">
-                <img
-                  src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                  alt=""
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 grid place-items-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
-                  <div className="grid h-12 w-12 place-items-center rounded-full bg-white/90 text-foreground shadow-float">
-                    <Play className="h-5 w-5 translate-x-0.5 fill-current" />
+      {vlogs.length === 0 ? (
+        <Item className="mt-8">
+          <div className="rounded-xl border border-border bg-muted/40 p-8 text-center">
+            <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary">
+              <Video className="h-6 w-6" strokeWidth={1.6} />
+            </div>
+            <h2 className="text-lg font-semibold">Video logs coming soon</h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
+              Short films from the desk. Process, life, occasional rants.
+            </p>
+            <div className="mt-6 rounded-lg border border-border bg-background/60 p-4 text-left font-mono text-[12px] text-muted-foreground">
+              <span className="text-syntax-comment">// </span>
+              No videos recorded yet. Subscribe for updates.
+            </div>
+          </div>
+        </Item>
+      ) : (
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          {vlogs.map((v) => (
+            <Item key={v.slug}>
+              <button
+                onClick={() =>
+                  open({
+                    id: `vlogs/${v.slug}`,
+                    label: v.file,
+                    path: `vlogs/${v.file}`,
+                    kind: 'file',
+                  })
+                }
+                className="group block w-full overflow-hidden rounded-lg border border-border bg-card text-left transition-all hover:border-primary/40 hover:shadow-panel"
+              >
+                <div className="relative aspect-video overflow-hidden bg-muted">
+                  <img
+                    src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 grid place-items-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="grid h-12 w-12 place-items-center rounded-full bg-white/90 text-foreground shadow-float">
+                      <Play className="h-5 w-5 translate-x-0.5 fill-current" />
+                    </div>
                   </div>
+                  <span className="absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 font-mono text-[10px] text-white">
+                    {v.duration}
+                  </span>
                 </div>
-                <span className="absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 font-mono text-[10px] text-white">
-                  {v.duration}
-                </span>
-              </div>
-              <div className="p-3">
-                <h3 className="font-semibold text-[14px] group-hover:text-primary">{v.title}</h3>
-                <p className="mt-1 text-[12px] text-muted-foreground line-clamp-2">
-                  {v.description}
-                </p>
-                <p className="mt-2 font-mono text-[10.5px] text-muted-foreground">
-                  {formatDate(v.date)}
-                </p>
-              </div>
-            </button>
-          </Item>
-        ))}
-      </div>
+                <div className="p-3">
+                  <h3 className="font-semibold text-[14px] group-hover:text-primary">{v.title}</h3>
+                  <p className="mt-1 text-[12px] text-muted-foreground line-clamp-2">
+                    {v.description}
+                  </p>
+                  <p className="mt-2 font-mono text-[10.5px] text-muted-foreground">
+                    {formatDate(v.date)}
+                  </p>
+                </div>
+              </button>
+            </Item>
+          ))}
+        </div>
+      )}
     </EditorContainer>
   );
 }
