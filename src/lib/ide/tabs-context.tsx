@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 
 export type FileId = string; // e.g. "about/README.md"
 
@@ -6,7 +14,7 @@ export interface OpenTab {
   id: FileId;
   label: string; // basename
   path: string; // full path e.g. about/README.md
-  kind: "file";
+  kind: 'file';
 }
 
 interface TabsContextValue {
@@ -33,21 +41,21 @@ interface TabsContextValue {
   setCursor: (c: { line: number; col: number }) => void;
 }
 
-export type SidebarView = "explorer" | "search" | "projects" | "blog" | "contact";
+export type SidebarView = 'explorer' | 'search' | 'projects' | 'blog' | 'contact';
 
 const TabsContext = createContext<TabsContextValue | null>(null);
 
 const DEFAULT_TAB: OpenTab = {
-  id: "about/README.md",
-  label: "README.md",
-  path: "about/README.md",
-  kind: "file",
+  id: 'about/README.md',
+  label: 'README.md',
+  path: 'about/README.md',
+  kind: 'file',
 };
 
 export function TabsProvider({ children }: { children: ReactNode }) {
   const [tabs, setTabs] = useState<OpenTab[]>([DEFAULT_TAB]);
   const [activeId, setActiveId] = useState<FileId | null>(DEFAULT_TAB.id);
-  const [sidebarView, setSidebarView] = useState<SidebarView>("explorer");
+  const [sidebarView, setSidebarView] = useState<SidebarView>('explorer');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -80,21 +88,21 @@ export function TabsProvider({ children }: { children: ReactNode }) {
   // Global shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setPaletteOpen((v) => !v);
       }
-      if ((e.metaKey || e.ctrlKey) && e.key === "`") {
+      if ((e.metaKey || e.ctrlKey) && e.key === '`') {
         e.preventDefault();
         setTerminalOpen((v) => !v);
       }
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b") {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'b') {
         e.preventDefault();
         setSidebarOpen((v) => !v);
       }
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
   }, []);
 
   const value = useMemo<TabsContextValue>(
@@ -117,7 +125,19 @@ export function TabsProvider({ children }: { children: ReactNode }) {
       cursor,
       setCursor,
     }),
-    [tabs, activeId, open, close, activate, sidebarView, sidebarOpen, terminalOpen, paletteOpen, mobileNavOpen, cursor],
+    [
+      tabs,
+      activeId,
+      open,
+      close,
+      activate,
+      sidebarView,
+      sidebarOpen,
+      terminalOpen,
+      paletteOpen,
+      mobileNavOpen,
+      cursor,
+    ]
   );
 
   return <TabsContext.Provider value={value}>{children}</TabsContext.Provider>;
@@ -125,6 +145,6 @@ export function TabsProvider({ children }: { children: ReactNode }) {
 
 export function useTabs() {
   const ctx = useContext(TabsContext);
-  if (!ctx) throw new Error("useTabs must be used within TabsProvider");
+  if (!ctx) throw new Error('useTabs must be used within TabsProvider');
   return ctx;
 }
