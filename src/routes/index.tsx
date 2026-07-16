@@ -5,7 +5,8 @@ export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
       {
-        title: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+        title: 'Yash Ajay Magar — AI Builder · Developer · Diploma Student',
+
       },
       {
         name: 'description',
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/')({
       },
       {
         property: 'og:title',
-        content: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+        content: 'Yash Ajay Magar — AI Builder · Developer · Diploma Student',
       },
       {
         property: 'og:description',
@@ -26,7 +27,7 @@ export const Route = createFileRoute('/')({
       { name: 'twitter:card', content: 'summary_large_image' },
       {
         name: 'twitter:title',
-        content: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+        content: 'Yash Ajay Magar — AI Builder · Developer · Diploma Student',
       },
     ],
     links: [{ rel: 'canonical', href: 'https://magar.xyz/' }],
