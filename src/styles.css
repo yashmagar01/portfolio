@@ -306,6 +306,21 @@
 }
 
 
+/* Callout styles */
+@utility callout-base {
+  @apply my-6 flex gap-3 rounded-lg border p-4;
+}
+
+/* Mobile bottom sheet for TOC */
+@utility toc-mobile {
+  @apply fixed bottom-0 left-0 right-0 z-40 rounded-t-xl border border-border bg-background shadow-float;
+}
+
+/* Reading progress label */
+@utility reading-pct {
+  @apply absolute right-2 top-1.5 font-mono text-[10px] text-muted-foreground bg-background/80 backdrop-blur-sm rounded px-1.5 py-0.5 border border-border;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
