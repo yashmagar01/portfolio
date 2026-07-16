@@ -1,13 +1,13 @@
-import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { ChevronRight, Search as SearchIcon, Mail, Github, Linkedin, Twitter } from "lucide-react";
-import { useTabs, type OpenTab } from "@/lib/ide/tabs-context";
-import { iconForFile, folderIcon } from "@/lib/ide/file-icons";
-import { profile } from "@/data/portfolio";
-import { projects } from "@/data/projects";
-import { posts } from "@/data/blog";
-import { vlogs } from "@/data/vlogs";
-import { cn } from "@/lib/utils";
+import { useMemo, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ChevronRight, Search as SearchIcon, Mail, Github, Linkedin, Twitter } from 'lucide-react';
+import { useTabs, type OpenTab } from '@/lib/ide/tabs-context';
+import { iconForFile, folderIcon } from '@/lib/ide/file-icons';
+import { profile } from '@/data/portfolio';
+import { projects } from '@/data/projects';
+import { posts } from '@/data/blog';
+import { vlogs } from '@/data/vlogs';
+import { cn } from '@/lib/utils';
 
 interface FileNode {
   name: string;
@@ -29,20 +29,20 @@ function buildTree(): FolderNode {
   const featured = projects.filter((p) => p.featured);
   const archived = projects.filter((p) => !p.featured);
   return {
-    name: "yash-portfolio",
+    name: 'yash-portfolio',
     defaultOpen: true,
     children: [
       {
-        name: "about",
+        name: 'about',
         defaultOpen: true,
         children: [
-          { name: "README.md", path: "about/README.md", id: "about/README.md" },
-          { name: "skills.json", path: "about/skills.json", id: "about/skills.json" },
-          { name: "education.md", path: "about/education.md", id: "about/education.md" },
+          { name: 'README.md', path: 'about/README.md', id: 'about/README.md' },
+          { name: 'skills.json', path: 'about/skills.json', id: 'about/skills.json' },
+          { name: 'education.md', path: 'about/education.md', id: 'about/education.md' },
         ],
       },
       {
-        name: "projects",
+        name: 'projects',
         defaultOpen: true,
         children: [
           ...featured.map((p) => ({
@@ -52,7 +52,7 @@ function buildTree(): FolderNode {
             meta: p.tech[0],
           })),
           {
-            name: "archive",
+            name: 'archive',
             defaultOpen: false,
             children: archived.map((p) => ({
               name: p.file,
@@ -63,7 +63,7 @@ function buildTree(): FolderNode {
         ],
       },
       {
-        name: "blog",
+        name: 'blog',
         defaultOpen: true,
         children: posts.map((p) => ({
           name: p.file,
@@ -72,7 +72,7 @@ function buildTree(): FolderNode {
         })),
       },
       {
-        name: "vlogs",
+        name: 'vlogs',
         defaultOpen: false,
         children: vlogs.map((v) => ({
           name: v.file,
@@ -81,22 +81,16 @@ function buildTree(): FolderNode {
           meta: v.duration,
         })),
       },
-      { name: "contact.json", path: "contact.json", id: "contact.json" },
+      { name: 'contact.json', path: 'contact.json', id: 'contact.json' },
     ],
   };
 }
 
 const tree = buildTree();
 
-function TreeNode({
-  node,
-  depth,
-}: {
-  node: FolderNode | FileNode;
-  depth: number;
-}) {
+function TreeNode({ node, depth }: { node: FolderNode | FileNode; depth: number }) {
   const { open, activeId } = useTabs();
-  const [openState, setOpenState] = useState(isFolder(node) ? node.defaultOpen ?? false : false);
+  const [openState, setOpenState] = useState(isFolder(node) ? (node.defaultOpen ?? false) : false);
 
   if (isFolder(node)) {
     const FolderIcon = folderIcon(openState);
@@ -109,8 +103,8 @@ function TreeNode({
         >
           <ChevronRight
             className={cn(
-              "h-3.5 w-3.5 text-muted-foreground transition-transform duration-150",
-              openState && "rotate-90",
+              'h-3.5 w-3.5 text-muted-foreground transition-transform duration-150',
+              openState && 'rotate-90'
             )}
           />
           <FolderIcon className="h-4 w-4 text-primary/80" strokeWidth={1.6} />
@@ -120,13 +114,13 @@ function TreeNode({
           {openState && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
+              animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 40 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 40 }}
               className="overflow-hidden"
             >
               {node.children.map((c) => (
-                <TreeNode key={c.name + (isFolder(c) ? "-f" : "")} node={c} depth={depth + 1} />
+                <TreeNode key={c.name + (isFolder(c) ? '-f' : '')} node={c} depth={depth + 1} />
               ))}
             </motion.div>
           )}
@@ -144,16 +138,16 @@ function TreeNode({
           id: node.id,
           label: node.name,
           path: node.path,
-          kind: "file",
+          kind: 'file',
         } satisfies OpenTab)
       }
       className={cn(
-        "group flex w-full items-center gap-1.5 rounded px-1.5 py-[3px] text-left font-mono text-[13px] transition-colors",
-        active ? "bg-selection text-foreground" : "text-foreground/85 hover:bg-hover hover:pl-[7px]",
+        'group flex w-full items-center gap-1.5 rounded px-1.5 py-[3px] text-left font-mono text-[13px] transition-colors',
+        active ? 'bg-selection text-foreground' : 'text-foreground/85 hover:bg-hover hover:pl-[7px]'
       )}
       style={{ paddingLeft: 6 + depth * 12 + 14 }}
     >
-      <Icon className={cn("h-4 w-4 shrink-0", color)} strokeWidth={1.6} />
+      <Icon className={cn('h-4 w-4 shrink-0', color)} strokeWidth={1.6} />
       <span className="truncate">{node.name}</span>
       {node.meta && (
         <span className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground/70">
@@ -185,7 +179,7 @@ function SidebarHeader({ title, children }: { title: string; children?: React.Re
 }
 
 function SearchView() {
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState('');
   const { open } = useTabs();
   const results = useMemo(() => {
     if (!q.trim()) return [];
@@ -195,7 +189,7 @@ function SearchView() {
         (p) =>
           p.title.toLowerCase().includes(needle) ||
           p.tagline.toLowerCase().includes(needle) ||
-          p.tech.some((t) => t.toLowerCase().includes(needle)),
+          p.tech.some((t) => t.toLowerCase().includes(needle))
       )
       .map((p) => ({
         id: `projects/${p.slug}`,
@@ -204,7 +198,9 @@ function SearchView() {
         preview: p.tagline,
       }));
     const postResults = posts
-      .filter((p) => p.title.toLowerCase().includes(needle) || p.excerpt.toLowerCase().includes(needle))
+      .filter(
+        (p) => p.title.toLowerCase().includes(needle) || p.excerpt.toLowerCase().includes(needle)
+      )
       .map((p) => ({
         id: `blog/${p.slug}`,
         label: p.file,
@@ -235,7 +231,7 @@ function SearchView() {
         {results.map((r) => (
           <button
             key={r.id}
-            onClick={() => open({ id: r.id, label: r.label, path: r.path, kind: "file" })}
+            onClick={() => open({ id: r.id, label: r.label, path: r.path, kind: 'file' })}
             className="w-full rounded px-2 py-1.5 text-left hover:bg-hover"
           >
             <div className="font-mono text-[12px] text-syntax-fn">{r.label}</div>
@@ -265,16 +261,16 @@ function ListView({
           return (
             <button
               key={it.id}
-              onClick={() => open({ id: it.id, label: it.label, path: it.path, kind: "file" })}
+              onClick={() => open({ id: it.id, label: it.label, path: it.path, kind: 'file' })}
               className={cn(
-                "flex w-full flex-col items-start gap-0.5 border-l-2 px-3 py-2 text-left transition-colors",
+                'flex w-full flex-col items-start gap-0.5 border-l-2 px-3 py-2 text-left transition-colors',
                 active
-                  ? "border-primary bg-selection"
-                  : "border-transparent hover:border-primary/40 hover:bg-hover",
+                  ? 'border-primary bg-selection'
+                  : 'border-transparent hover:border-primary/40 hover:bg-hover'
               )}
             >
               <div className="flex w-full items-center gap-2">
-                <Icon className={cn("h-3.5 w-3.5", color)} strokeWidth={1.6} />
+                <Icon className={cn('h-3.5 w-3.5', color)} strokeWidth={1.6} />
                 <span className="font-mono text-[12.5px] truncate">{it.label}</span>
                 {it.meta && (
                   <span className="ml-auto text-[10px] text-muted-foreground">{it.meta}</span>
@@ -301,7 +297,7 @@ function ContactView() {
       <div className="px-3 py-2 space-y-3 text-sm">
         <button
           onClick={() =>
-            open({ id: "contact.json", label: "contact.json", path: "contact.json", kind: "file" })
+            open({ id: 'contact.json', label: 'contact.json', path: 'contact.json', kind: 'file' })
           }
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-left hover:border-primary/40 hover:bg-hover"
         >
@@ -321,15 +317,7 @@ function ContactView() {
   );
 }
 
-function SidebarLink({
-  href,
-  Icon,
-  label,
-}: {
-  href: string;
-  Icon: typeof Mail;
-  label: string;
-}) {
+function SidebarLink({ href, Icon, label }: { href: string; Icon: typeof Mail; label: string }) {
   return (
     <a
       href={href}
@@ -356,7 +344,7 @@ export function Sidebar() {
     id: `blog/${p.slug}`,
     label: p.file,
     path: `blog/${p.file}`,
-    meta: new Date(p.date).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+    meta: new Date(p.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
     sub: p.excerpt,
   }));
 
@@ -365,11 +353,11 @@ export function Sidebar() {
       className="flex h-full min-w-0 flex-col bg-sidebar-bg border-r border-border"
       aria-label="Sidebar"
     >
-      {sidebarView === "explorer" && <ExplorerView />}
-      {sidebarView === "search" && <SearchView />}
-      {sidebarView === "projects" && <ListView title="Projects" items={projectItems} />}
-      {sidebarView === "blog" && <ListView title="Blog" items={postItems} />}
-      {sidebarView === "contact" && <ContactView />}
+      {sidebarView === 'explorer' && <ExplorerView />}
+      {sidebarView === 'search' && <SearchView />}
+      {sidebarView === 'projects' && <ListView title="Projects" items={projectItems} />}
+      {sidebarView === 'blog' && <ListView title="Blog" items={postItems} />}
+      {sidebarView === 'contact' && <ContactView />}
     </aside>
   );
 }
