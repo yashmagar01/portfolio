@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 import { CodeBlock } from './CodeBlock';
+import { Callout } from './Callout';
 
 function slugify(text: string): string {
   return text
@@ -63,8 +64,21 @@ export function RenderBody({ body }: RenderBodyProps) {
   while (i < blocks.length) {
     const block = blocks[i];
 
+    // Callout block
+    if (block.startsWith(':::')) {
+      const lines = block.split('\n');
+      const calloutType = lines[0].slice(3).trim() as 'info' | 'warning' | 'success' | 'tip' | 'quote';
+      if (['info', 'warning', 'success', 'tip', 'quote'].includes(calloutType)) {
+        const content = lines.slice(1).join(' ').replace(/:::$/, '').trim();
+        elements.push(
+          <Callout key={i} type={calloutType}>
+            {renderInline(content)}
+          </Callout>,
+        );
+      }
+    }
     // Fenced code block — collect until closing fence
-    if (block.startsWith('```')) {
+    else if (block.startsWith('```')) {
       const lines = block.split('\n');
       const lang = lines[0].slice(3).trim() || undefined;
       // Check if closing fence is in the same block
