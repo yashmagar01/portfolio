@@ -1,9 +1,9 @@
-import { defineConfig } from "vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import viteReact from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import { devtools } from "@tanstack/devtools-vite";
-import { nitro } from "nitro/vite";
+import { defineConfig } from 'vite';
+import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+import viteReact from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import { devtools } from '@tanstack/devtools-vite';
+import { nitro } from 'nitro/vite';
 
 export default defineConfig({
   plugins: [
@@ -15,7 +15,10 @@ export default defineConfig({
       removeDevtoolsOnBuild: false,
       injectSource: { enabled: true },
     }),
-    tanstackStart({ server: { entry: "server" }, router: { routeFileIgnorePattern: '(server|start)\\.ts' } }),
+    tanstackStart({
+      server: { entry: 'server' },
+      router: { routeFileIgnorePattern: '(server|start)\\.ts' },
+    }),
     nitro(),
     viteReact(),
     tailwindcss(),
@@ -23,22 +26,22 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
     dedupe: [
-      "react",
-      "react-dom",
-      "react/jsx-runtime",
-      "react/jsx-dev-runtime",
-      "@tanstack/react-query",
-      "@tanstack/query-core",
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      '@tanstack/react-query',
+      '@tanstack/query-core',
     ],
   },
-  css: { transformer: "lightningcss" },
+  css: { transformer: 'lightningcss' },
   optimizeDeps: {
     include: [
-      "react",
-      "react-dom",
-      "react-dom/client",
-      "react/jsx-runtime",
-      "react/jsx-dev-runtime",
+      'react',
+      'react-dom',
+      'react-dom/client',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
     ],
   },
 });
