@@ -1,0 +1,62 @@
+export type { Project, ProjectCategory } from "./projects";
+export type { Post } from "./blog";
+export type { Vlog } from "./vlogs";
+
+export interface Skill {
+  name: string;
+  category: "Language" | "Framework" | "Tool" | "Design";
+  level: 1 | 2 | 3 | 4 | 5;
+  publisher: string;
+}
+
+export const profile = {
+  name: "Yash",
+  handle: "@yash",
+  role: "Computer Engineering student & independent developer",
+  location: "Pune, India",
+  tagline: "shipping software from a college hostel room",
+  email: "yash@example.com",
+  github: "https://github.com/yash",
+  linkedin: "https://linkedin.com/in/yash",
+  twitter: "https://x.com/yash",
+  branch: "main/shipping-in-public",
+  bio: `I'm Yash — a Diploma in Computer Engineering student at Government Polytechnic Awasari, Pune, and an independent developer building real software for clients, friends, and myself.
+
+I work across the stack: React and TypeScript on the front, Node and Supabase on the back, Flutter when a project wants to live on a phone. I care about interfaces that feel obvious, code that stays kind to future me, and shipping small things quickly instead of talking about big things for years.
+
+Outside of code I write essays, film short vlogs about the process, and try to keep learning in public.`,
+};
+
+export const education = [
+  {
+    school: "Government Polytechnic Awasari",
+    program: "Diploma in Computer Engineering",
+    period: "2023 — Present",
+    detail: "Currently in third year. Focus on data structures, web systems, and applied projects.",
+  },
+  {
+    school: "Zilla Parishad High School",
+    program: "SSC",
+    period: "2022",
+    detail: "Distinction. First introduction to programming through a school computer club.",
+  },
+];
+
+export const skills: Skill[] = [
+  { name: "TypeScript", category: "Language", level: 5, publisher: "Microsoft" },
+  { name: "React", category: "Framework", level: 5, publisher: "Meta" },
+  { name: "Next.js", category: "Framework", level: 4, publisher: "Vercel" },
+  { name: "TanStack Start", category: "Framework", level: 4, publisher: "TanStack" },
+  { name: "Node.js", category: "Language", level: 4, publisher: "OpenJS" },
+  { name: "Python", category: "Language", level: 4, publisher: "PSF" },
+  { name: "Flutter", category: "Framework", level: 3, publisher: "Google" },
+  { name: "Supabase", category: "Tool", level: 4, publisher: "Supabase Inc." },
+  { name: "PostgreSQL", category: "Tool", level: 4, publisher: "PostgreSQL Global" },
+  { name: "Tailwind CSS", category: "Framework", level: 5, publisher: "Tailwind Labs" },
+  { name: "Figma", category: "Design", level: 4, publisher: "Figma" },
+  { name: "Framer Motion", category: "Framework", level: 4, publisher: "Framer" },
+];
+
+export { projects } from "./projects";
+export { posts } from "./blog";
+export { vlogs } from "./vlogs";

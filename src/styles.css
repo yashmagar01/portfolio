@@ -1,0 +1,270 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system: Light IDE portfolio
+ * Inspired by VS Code Light+ / GitHub Light.
+ * Monospace for chrome, humanist sans for reading content.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* IDE-specific tokens */
+  --color-editor: var(--editor);
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-activity-bg: var(--activity-bg);
+  --color-titlebar: var(--titlebar);
+  --color-statusbar: var(--statusbar);
+  --color-statusbar-fg: var(--statusbar-fg);
+  --color-tab-active: var(--tab-active);
+  --color-tab-inactive: var(--tab-inactive);
+  --color-hover: var(--hover);
+  --color-selection: var(--selection);
+  --color-line-number: var(--line-number);
+
+  /* Syntax accent tokens */
+  --color-syntax-keyword: var(--syntax-keyword);
+  --color-syntax-string: var(--syntax-string);
+  --color-syntax-fn: var(--syntax-fn);
+  --color-syntax-var: var(--syntax-var);
+  --color-syntax-comment: var(--syntax-comment);
+  --color-syntax-tag: var(--syntax-tag);
+  --color-syntax-number: var(--syntax-number);
+
+  --shadow-panel: 0 1px 2px oklch(0 0 0 / 0.04), 0 4px 12px oklch(0 0 0 / 0.04);
+  --shadow-float: 0 8px 32px oklch(0 0 0 / 0.08), 0 2px 6px oklch(0 0 0 / 0.04);
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Base surface (editor) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.22 0.01 260);
+  --editor: oklch(1 0 0);
+
+  /* Chrome surfaces */
+  --sidebar-bg: oklch(0.975 0.003 260);
+  --activity-bg: oklch(0.955 0.004 260);
+  --titlebar: oklch(0.965 0.003 260);
+  --statusbar: oklch(0.55 0.15 250); /* VS Code style blue status bar */
+  --statusbar-fg: oklch(1 0 0);
+
+  --tab-active: oklch(1 0 0);
+  --tab-inactive: oklch(0.955 0.004 260);
+  --hover: oklch(0.945 0.005 260);
+  --selection: oklch(0.92 0.04 250);
+  --line-number: oklch(0.72 0.02 260);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.01 260);
+  --primary: oklch(0.5 0.17 252); /* #0969DA blue */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.955 0.004 260);
+  --secondary-foreground: oklch(0.22 0.01 260);
+  --muted: oklch(0.955 0.004 260);
+  --muted-foreground: oklch(0.5 0.015 260);
+  --accent: oklch(0.945 0.02 250);
+  --accent-foreground: oklch(0.22 0.01 260);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.91 0.005 260);
+  --input: oklch(0.91 0.005 260);
+  --ring: oklch(0.5 0.17 252);
+
+  /* Syntax colors — GitHub Light inspired */
+  --syntax-keyword: oklch(0.5 0.19 350); /* magenta/purple - keywords */
+  --syntax-string: oklch(0.5 0.16 30); /* red-orange - strings */
+  --syntax-fn: oklch(0.55 0.17 265); /* blue - functions */
+  --syntax-var: oklch(0.5 0.17 252); /* blue - variables */
+  --syntax-comment: oklch(0.55 0.02 260); /* muted - comments */
+  --syntax-tag: oklch(0.55 0.15 150); /* green - tags */
+  --syntax-number: oklch(0.55 0.14 60); /* orange - numbers */
+}
+
+.dark {
+  /* dark mode not used, kept for compatibility */
+  --background: oklch(0.18 0.01 260);
+  --foreground: oklch(0.95 0 0);
+  --editor: oklch(0.18 0.01 260);
+  --sidebar-bg: oklch(0.2 0.01 260);
+  --activity-bg: oklch(0.16 0.01 260);
+  --titlebar: oklch(0.2 0.01 260);
+  --statusbar: oklch(0.4 0.15 252);
+  --statusbar-fg: oklch(1 0 0);
+  --tab-active: oklch(0.18 0.01 260);
+  --tab-inactive: oklch(0.2 0.01 260);
+  --hover: oklch(0.24 0.01 260);
+  --selection: oklch(0.3 0.05 252);
+  --line-number: oklch(0.5 0.01 260);
+  --card: oklch(0.2 0.01 260);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.2 0.01 260);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.7 0.17 252);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.24 0.01 260);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.24 0.01 260);
+  --muted-foreground: oklch(0.7 0.01 260);
+  --accent: oklch(0.28 0.02 252);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.28 0.01 260);
+  --input: oklch(0.28 0.01 260);
+  --ring: oklch(0.7 0.17 252);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp,
+  .font-mono {
+    font-family: var(--font-mono);
+    font-feature-settings: "calt", "liga";
+  }
+}
+
+/* Custom utilities */
+@utility ide-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.85 0.005 260) transparent;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: oklch(0.85 0.005 260);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.75 0.01 260);
+  }
+}
+
+@utility caret-blink {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@utility prose-editor {
+  & h1 {
+    @apply text-3xl font-semibold tracking-tight mt-2 mb-4;
+  }
+  & h2 {
+    @apply text-2xl font-semibold tracking-tight mt-8 mb-3;
+  }
+  & h3 {
+    @apply text-xl font-semibold mt-6 mb-2;
+  }
+  & p {
+    @apply my-4 leading-7 text-[15px];
+  }
+  & ul {
+    @apply my-4 pl-6 list-disc space-y-1.5;
+  }
+  & ol {
+    @apply my-4 pl-6 list-decimal space-y-1.5;
+  }
+  & a {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+  & code {
+    @apply px-1.5 py-0.5 rounded bg-muted text-[0.9em] text-syntax-string;
+  }
+  & pre {
+    @apply my-4 p-4 rounded-md bg-muted overflow-x-auto text-sm;
+  }
+  & pre code {
+    @apply bg-transparent p-0 text-foreground;
+  }
+  & blockquote {
+    @apply my-4 pl-4 border-l-2 border-primary/40 text-muted-foreground italic;
+  }
+  & hr {
+    @apply my-8 border-border;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile reduced animation — lighter transitions on small screens */
+@media (max-width: 768px) {
+  .ide-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+}
