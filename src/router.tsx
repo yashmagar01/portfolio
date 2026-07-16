@@ -5,10 +5,12 @@ import { routeTree } from './routeTree.gen';
 export const getRouter = () => {
   const queryClient = new QueryClient();
 
+  const isBrowser = typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
+
   const router = createRouter({
     routeTree,
     context: { queryClient },
-    scrollRestoration: true,
+    scrollRestoration: isBrowser,
     defaultPreloadStaleTime: 0,
   });
 
