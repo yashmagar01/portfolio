@@ -1,13 +1,13 @@
-import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { ChevronRight, Search as SearchIcon, Mail, Github, Linkedin, Twitter } from "lucide-react";
-import { useTabs, type OpenTab } from "@/lib/ide/tabs-context";
-import { iconForFile, folderIcon } from "@/lib/ide/file-icons";
-import { profile } from "@/data/portfolio";
-import { projects } from "@/data/projects";
-import { posts } from "@/data/blog";
-import { vlogs } from "@/data/vlogs";
-import { cn } from "@/lib/utils";
+import { useMemo, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ChevronRight, Search as SearchIcon, Mail, Github, Linkedin, Twitter } from 'lucide-react';
+import { useTabs, type OpenTab } from '@/lib/ide/tabs-context';
+import { iconForFile, folderIcon } from '@/lib/ide/file-icons';
+import { profile } from '@/data/portfolio';
+import { projects } from '@/data/projects';
+import { posts } from '@/data/blog';
+import { vlogs } from '@/data/vlogs';
+import { cn } from '@/lib/utils';
 
 interface FileNode {
   name: string;
@@ -29,20 +29,21 @@ function buildTree(): FolderNode {
   const featured = projects.filter((p) => p.featured);
   const archived = projects.filter((p) => !p.featured);
   return {
-    name: "yash-portfolio",
+    name: 'yash-portfolio',
     defaultOpen: true,
     children: [
       {
-        name: "about",
+        name: 'about',
         defaultOpen: true,
         children: [
-          { name: "README.md", path: "about/README.md", id: "about/README.md" },
-          { name: "skills.json", path: "about/skills.json", id: "about/skills.json" },
-          { name: "education.md", path: "about/education.md", id: "about/education.md" },
+          { name: 'README.md', path: 'about/README.md', id: 'about/README.md' },
+          { name: 'skills.json', path: 'about/skills.json', id: 'about/skills.json' },
+          { name: 'education.md', path: 'about/education.md', id: 'about/education.md' },
+          { name: 'resume.md', path: 'about/resume.md', id: 'about/resume.md' },
         ],
       },
       {
-        name: "projects",
+        name: 'projects',
         defaultOpen: true,
         children: [
           ...featured.map((p) => ({
@@ -52,7 +53,7 @@ function buildTree(): FolderNode {
             meta: p.tech[0],
           })),
           {
-            name: "archive",
+            name: 'archive',
             defaultOpen: false,
             children: archived.map((p) => ({
               name: p.file,
@@ -63,40 +64,40 @@ function buildTree(): FolderNode {
         ],
       },
       {
-        name: "blog",
+        name: 'blog',
         defaultOpen: true,
-        children: posts.map((p) => ({
-          name: p.file,
-          path: `blog/${p.file}`,
-          id: `blog/${p.slug}`,
-        })),
+        children:
+          posts.length > 0
+            ? posts.map((p) => ({
+                name: p.file,
+                path: `blog/${p.file}`,
+                id: `blog/${p.slug}`,
+              }))
+            : [{ name: '— no posts yet', path: 'blog/', id: 'blog/' }],
       },
       {
-        name: "vlogs",
+        name: 'vlogs',
         defaultOpen: false,
-        children: vlogs.map((v) => ({
-          name: v.file,
-          path: `vlogs/${v.file}`,
-          id: `vlogs/${v.slug}`,
-          meta: v.duration,
-        })),
+        children:
+          vlogs.length > 0
+            ? vlogs.map((v) => ({
+                name: v.file,
+                path: `vlogs/${v.file}`,
+                id: `vlogs/${v.slug}`,
+                meta: v.duration,
+              }))
+            : [{ name: '— no vlogs yet', path: 'vlogs/', id: 'vlogs/' }],
       },
-      { name: "contact.json", path: "contact.json", id: "contact.json" },
+      { name: 'contact.json', path: 'contact.json', id: 'contact.json' },
     ],
   };
 }
 
 const tree = buildTree();
 
-function TreeNode({
-  node,
-  depth,
-}: {
-  node: FolderNode | FileNode;
-  depth: number;
-}) {
+function TreeNode({ node, depth }: { node: FolderNode | FileNode; depth: number }) {
   const { open, activeId } = useTabs();
-  const [openState, setOpenState] = useState(isFolder(node) ? node.defaultOpen ?? false : false);
+  const [openState, setOpenState] = useState(isFolder(node) ? (node.defaultOpen ?? false) : false);
 
   if (isFolder(node)) {
     const FolderIcon = folderIcon(openState);
@@ -109,7 +110,7 @@ function TreeNode({
         >
           <motion.span
             animate={{ rotate: openState ? 90 : 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 35, mass: 0.6 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 35, mass: 0.6 }}
             className="grid place-items-center"
           >
             <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
@@ -126,15 +127,15 @@ function TreeNode({
               variants={{
                 hidden: { height: 0, opacity: 0 },
                 show: {
-                  height: "auto",
+                  height: 'auto',
                   opacity: 1,
                   transition: {
-                    type: "spring",
+                    type: 'spring',
                     stiffness: 500,
                     damping: 35,
                     mass: 0.8,
                     staggerChildren: 0.03,
-                    when: "beforeChildren",
+                    when: 'beforeChildren',
                   },
                 },
               }}
@@ -142,13 +143,13 @@ function TreeNode({
             >
               {node.children.map((c) => (
                 <motion.div
-                  key={c.name + (isFolder(c) ? "-f" : "")}
+                  key={c.name + (isFolder(c) ? '-f' : '')}
                   variants={{
                     hidden: { opacity: 0, x: -6 },
                     show: {
                       opacity: 1,
                       x: 0,
-                      transition: { type: "spring", stiffness: 400, damping: 30, mass: 0.8 },
+                      transition: { type: 'spring', stiffness: 400, damping: 30, mass: 0.8 },
                     },
                   }}
                 >
@@ -171,16 +172,16 @@ function TreeNode({
           id: node.id,
           label: node.name,
           path: node.path,
-          kind: "file",
+          kind: 'file',
         } satisfies OpenTab)
       }
       className={cn(
-        "group flex w-full items-center gap-1.5 rounded px-1.5 py-[5px] text-left font-mono text-[13px] transition-colors",
-        active ? "bg-selection text-foreground" : "text-foreground/85 hover:bg-hover hover:pl-[7px]",
+        'group flex w-full items-center gap-1.5 rounded px-1.5 py-[5px] text-left font-mono text-[13px] transition-colors',
+        active ? 'bg-selection text-foreground' : 'text-foreground/85 hover:bg-hover hover:pl-[7px]'
       )}
       style={{ paddingLeft: 6 + depth * 12 + 14 }}
     >
-      <Icon className={cn("h-4 w-4 shrink-0", color)} strokeWidth={1.6} />
+      <Icon className={cn('h-4 w-4 shrink-0', color)} strokeWidth={1.6} />
       <span className="truncate">{node.name}</span>
       {node.meta && (
         <span className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground/70">
@@ -212,7 +213,7 @@ function SidebarHeader({ title, children }: { title: string; children?: React.Re
 }
 
 function SearchView() {
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState('');
   const { open } = useTabs();
   const results = useMemo(() => {
     if (!q.trim()) return [];
@@ -222,7 +223,7 @@ function SearchView() {
         (p) =>
           p.title.toLowerCase().includes(needle) ||
           p.tagline.toLowerCase().includes(needle) ||
-          p.tech.some((t) => t.toLowerCase().includes(needle)),
+          p.tech.some((t) => t.toLowerCase().includes(needle))
       )
       .map((p) => ({
         id: `projects/${p.slug}`,
@@ -231,7 +232,9 @@ function SearchView() {
         preview: p.tagline,
       }));
     const postResults = posts
-      .filter((p) => p.title.toLowerCase().includes(needle) || p.excerpt.toLowerCase().includes(needle))
+      .filter(
+        (p) => p.title.toLowerCase().includes(needle) || p.excerpt.toLowerCase().includes(needle)
+      )
       .map((p) => ({
         id: `blog/${p.slug}`,
         label: p.file,
@@ -262,7 +265,7 @@ function SearchView() {
         {results.map((r) => (
           <button
             key={r.id}
-            onClick={() => open({ id: r.id, label: r.label, path: r.path, kind: "file" })}
+            onClick={() => open({ id: r.id, label: r.label, path: r.path, kind: 'file' })}
             className="w-full rounded px-2 py-1.5 text-left hover:bg-hover"
           >
             <div className="font-mono text-[12px] text-syntax-fn">{r.label}</div>
@@ -305,21 +308,21 @@ function ListView({
                 show: {
                   opacity: 1,
                   x: 0,
-                  transition: { type: "spring", stiffness: 400, damping: 30, mass: 0.8 },
+                  transition: { type: 'spring', stiffness: 400, damping: 30, mass: 0.8 },
                 },
               }}
             >
               <button
-                onClick={() => open({ id: it.id, label: it.label, path: it.path, kind: "file" })}
+                onClick={() => open({ id: it.id, label: it.label, path: it.path, kind: 'file' })}
                 className={cn(
-                  "flex w-full flex-col items-start gap-0.5 border-l-2 px-3 py-2 text-left transition-colors",
+                  'flex w-full flex-col items-start gap-0.5 border-l-2 px-3 py-2 text-left transition-colors',
                   active
-                    ? "border-primary bg-selection"
-                    : "border-transparent hover:border-primary/40 hover:bg-hover",
+                    ? 'border-primary bg-selection'
+                    : 'border-transparent hover:border-primary/40 hover:bg-hover'
                 )}
               >
                 <div className="flex w-full items-center gap-2">
-                  <Icon className={cn("h-3.5 w-3.5", color)} strokeWidth={1.6} />
+                  <Icon className={cn('h-3.5 w-3.5', color)} strokeWidth={1.6} />
                   <span className="font-mono text-[12.5px] truncate">{it.label}</span>
                   {it.meta && (
                     <span className="ml-auto text-[10px] text-muted-foreground">{it.meta}</span>
@@ -347,7 +350,7 @@ function ContactView() {
       <div className="px-3 py-2 space-y-3 text-sm">
         <button
           onClick={() =>
-            open({ id: "contact.json", label: "contact.json", path: "contact.json", kind: "file" })
+            open({ id: 'contact.json', label: 'contact.json', path: 'contact.json', kind: 'file' })
           }
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-left hover:border-primary/40 hover:bg-hover"
         >
@@ -358,24 +361,16 @@ function ContactView() {
         </button>
         <div className="space-y-1.5">
           <SidebarLink href={`mailto:${profile.email}`} Icon={Mail} label={profile.email} />
-          <SidebarLink href={profile.github} Icon={Github} label="github.com/yash" />
-          <SidebarLink href={profile.linkedin} Icon={Linkedin} label="linkedin.com/in/yash" />
-          <SidebarLink href={profile.twitter} Icon={Twitter} label="x.com/yash" />
+          <SidebarLink href={profile.github} Icon={Github} label="@yashmagar01" />
+          <SidebarLink href={profile.linkedin} Icon={Linkedin} label="in/yash-magar" />
+          <SidebarLink href={profile.twitter} Icon={Twitter} label="@yashmag50534849" />
         </div>
       </div>
     </div>
   );
 }
 
-function SidebarLink({
-  href,
-  Icon,
-  label,
-}: {
-  href: string;
-  Icon: typeof Mail;
-  label: string;
-}) {
+function SidebarLink({ href, Icon, label }: { href: string; Icon: typeof Mail; label: string }) {
   return (
     <a
       href={href}
@@ -402,7 +397,7 @@ export function Sidebar() {
     id: `blog/${p.slug}`,
     label: p.file,
     path: `blog/${p.file}`,
-    meta: new Date(p.date).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+    meta: new Date(p.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
     sub: p.excerpt,
   }));
 
@@ -417,14 +412,14 @@ export function Sidebar() {
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 10 }}
-          transition={{ type: "spring", stiffness: 420, damping: 33, mass: 0.9 }}
+          transition={{ type: 'spring', stiffness: 420, damping: 33, mass: 0.9 }}
           className="flex min-h-0 flex-1 flex-col"
         >
-          {sidebarView === "explorer" && <ExplorerView />}
-          {sidebarView === "search" && <SearchView />}
-          {sidebarView === "projects" && <ListView title="Projects" items={projectItems} />}
-          {sidebarView === "blog" && <ListView title="Blog" items={postItems} />}
-          {sidebarView === "contact" && <ContactView />}
+          {sidebarView === 'explorer' && <ExplorerView />}
+          {sidebarView === 'search' && <SearchView />}
+          {sidebarView === 'projects' && <ListView title="Projects" items={projectItems} />}
+          {sidebarView === 'blog' && <ListView title="Blog" items={postItems} />}
+          {sidebarView === 'contact' && <ContactView />}
         </motion.div>
       </AnimatePresence>
     </aside>
