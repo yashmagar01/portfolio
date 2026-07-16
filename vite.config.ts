@@ -14,7 +14,7 @@ export default defineConfig({
       removeDevtoolsOnBuild: false,
       injectSource: { enabled: true },
     }),
-    tanstackStart({ server: { entry: "server" } }),
+    tanstackStart({ server: { entry: "server" }, router: { routeFileIgnorePattern: '(server|start)\\.ts' } }),
     viteReact(),
     tailwindcss(),
   ],
