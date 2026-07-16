@@ -15,9 +15,10 @@ import { profile } from '@/data/portfolio';
 export function StatusBar() {
   const { tabs, activeId, cursor, terminalOpen, setTerminalOpen } = useTabs();
   const activeTab = tabs.find((t) => t.id === activeId);
-  const [time, setTime] = useState(() => new Date());
+  const [time, setTime] = useState<Date | null>(null);
 
   useEffect(() => {
+    setTime(new Date());
     const id = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
@@ -49,7 +50,7 @@ export function StatusBar() {
         </button>
         <span className="hidden md:inline text-white/70">UTF-8</span>
         <span className="hidden md:inline text-white/70">TypeScript React</span>
-        <span>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <span suppressHydrationWarning>{time?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         <div className="flex items-center gap-2 pl-2 border-l border-white/20">
           <SocialIcon href={`mailto:${profile.email}`} Icon={Mail} />
           <SocialIcon href={profile.github} Icon={Github} />
