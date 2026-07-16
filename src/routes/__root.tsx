@@ -17,7 +17,7 @@ const jsonLd = {
   name: 'Yash Ajay Magar',
   givenName: 'Yash',
   familyName: 'Magar',
-  jobTitle: 'AI Enthusiast, Developer, Entrepreneur, Diploma Student',
+  jobTitle: 'AI Builder, Developer, Diploma Student',
   description:
     'Portfolio of Yash Ajay Magar — AI enthusiast, full-stack developer, and open-source contributor.',
   url: 'https://magar.xyz',
@@ -97,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
-        title: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+        title: 'Yash Ajay Magar — AI Builder · Developer · Diploma Student',
       },
       {
         name: 'description',
@@ -116,7 +116,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: 'og:locale', content: 'en_IN' },
       {
         property: 'og:title',
-        content: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+        content: 'Yash Ajay Magar — AI Builder · Developer · Diploma Student',
       },
       {
         property: 'og:description',
@@ -127,7 +127,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: 'twitter:card', content: 'summary_large_image' },
       {
         name: 'twitter:title',
-        content: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+        content: 'Yash Ajay Magar — AI Builder · Developer · Diploma Student',
       },
       {
         name: 'twitter:description',
