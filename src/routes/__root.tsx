@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   Outlet,
   Link,
@@ -6,10 +6,33 @@ import {
   useRouter,
   HeadContent,
   Scripts,
-} from "@tanstack/react-router";
-import { type ReactNode } from "react";
+} from '@tanstack/react-router';
+import { type ReactNode } from 'react';
 
-import appCss from "../styles.css?url";
+import appCss from '../styles.css?url';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Yash Ajay Magar',
+  givenName: 'Yash',
+  familyName: 'Magar',
+  jobTitle: 'AI Enthusiast, Developer, Entrepreneur, Diploma Student',
+  description:
+    'Portfolio of Yash Ajay Magar — AI enthusiast, full-stack developer, and open-source contributor.',
+  url: 'https://magar.xyz',
+  email: 'yashajaymagar10@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Pune',
+    addressCountry: 'IN',
+  },
+  sameAs: [
+    'https://github.com/yashmagar01',
+    'https://www.linkedin.com/in/yash-magar/',
+    'https://x.com/yashmag50534849',
+  ],
+};
 
 function NotFoundComponent() {
   return (
@@ -71,29 +94,63 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Yash — Developer Portfolio" },
-      { name: "description", content: "Yash — Computer Engineering student & independent developer. Projects, writing, and vlogs, arranged like a code editor." },
-      { name: "author", content: "Yash" },
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "yash.dev" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "Yash — Developer Portfolio" },
-      { name: "twitter:title", content: "Yash — Developer Portfolio" },
-      { property: "og:description", content: "Yash — Computer Engineering student & independent developer. Projects, writing, and vlogs, arranged like a code editor." },
-      { name: "twitter:description", content: "Yash — Computer Engineering student & independent developer. Projects, writing, and vlogs, arranged like a code editor." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/FnO5RpchwocaoQdaD9TxFjY3U5v2/social-images/social-1784201061221-profile_pic.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/FnO5RpchwocaoQdaD9TxFjY3U5v2/social-images/social-1784201061221-profile_pic.webp" },
+      { charSet: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      {
+        title: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+      },
+      {
+        name: 'description',
+        content:
+          'Portfolio of Yash Ajay Magar — AI enthusiast, full-stack developer, and diploma student building AI-driven web products, developer tools, and open-source projects from Pune, India.',
+      },
+      { name: 'author', content: 'Yash Ajay Magar' },
+      {
+        name: 'keywords',
+        content:
+          'Yash Ajay Magar, Yash Magar, full-stack developer, AI enthusiast, portfolio, React, TypeScript, Pune, India, diploma student, web developer, open source',
+      },
+      { name: 'robots', content: 'index, follow' },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: 'magar.xyz' },
+      { property: 'og:locale', content: 'en_IN' },
+      {
+        property: 'og:title',
+        content: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+      },
+      {
+        property: 'og:description',
+        content:
+          'Portfolio of Yash Ajay Magar — AI enthusiast, full-stack developer, and diploma student building AI-driven web products, developer tools, and open-source projects from Pune, India.',
+      },
+      { property: 'og:image', content: '/og-image.svg' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      {
+        name: 'twitter:title',
+        content: 'Yash Ajay Magar — AI Enthusiast • Developer • Entrepreneur • Diploma Student',
+      },
+      {
+        name: 'twitter:description',
+        content:
+          'Portfolio of Yash Ajay Magar — AI enthusiast, full-stack developer, and diploma student building AI-driven web products, developer tools, and open-source projects from Pune, India.',
+      },
+      { name: 'twitter:image', content: '/og-image.svg' },
+      { name: 'twitter:creator', content: '@yashmag50534849' },
     ],
     links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: 'stylesheet', href: appCss },
+      { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap',
+      },
+    ],
+    scripts: [
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify(jsonLd),
       },
     ],
   }),
