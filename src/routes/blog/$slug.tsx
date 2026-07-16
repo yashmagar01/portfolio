@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { posts } from '@/data/blog';
 import { BlogNav } from '@/components/blog/BlogNav';
@@ -9,6 +10,11 @@ import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { AuthorCard } from '@/components/blog/AuthorCard';
 import { RenderBody } from '@/components/blog/RenderBody';
 import { ArticleMetadata } from '@/components/blog/ArticleMetadata';
+import { SeriesCard } from '@/components/blog/SeriesCard';
+import { RelatedProjects } from '@/components/blog/RelatedProjects';
+import { SearchDialog } from '@/components/blog/SearchDialog';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
+import { Calendar, Clock, BookOpen } from 'lucide-react';
 
 export const Route = createFileRoute('/blog/$slug')({
   loader: ({ params }) => {
@@ -96,8 +102,17 @@ export const Route = createFileRoute('/blog/$slug')({
   ),
 });
 
+function formatDate(d: string) {
+  return new Date(d).toLocaleDateString('en-IN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
 function PostPage() {
   const { post } = Route.useLoaderData();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const sortedPosts = [...posts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
@@ -106,10 +121,17 @@ function PostPage() {
   const prevPost = sortedPosts[currentIndex + 1] ?? null;
   const nextPost = sortedPosts[currentIndex - 1] ?? null;
 
+  useKeyboardShortcuts({
+    onSearch: () => setSearchOpen(true),
+    posts: sortedPosts,
+    currentSlug: post.slug,
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <ReadingProgress />
       <BlogNav postTitle={post.title} />
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Hero */}
       <div className="border-b border-border bg-muted/20">
@@ -152,6 +174,34 @@ function PostPage() {
           <div className="mt-6">
             <ArticleMetadata post={post} />
           </div>
+
+          {/* GitHub / Demo links */}
+          {(post.github || post.demo) && (
+            <div className="mt-4 flex flex-wrap gap-3">
+              {post.github && (
+                <a
+                  href={post.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  GitHub
+                </a>
+              )}
+              {post.demo && (
+                <a
+                  href={post.demo}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  Live Demo
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -162,18 +212,26 @@ function PostPage() {
           <article>
             <RenderBody body={post.body} />
 
+            {/* Divider */}
             <hr className="my-12 border-border" />
 
+            {/* Author + share */}
             <div className="space-y-8">
               <ShareRow title={post.title} slug={post.slug} />
               <PostNav prev={prevPost} next={nextPost} />
               <RelatedPosts current={post} all={posts} />
+              {post.relatedProjects && post.relatedProjects.length > 0 && (
+                <RelatedProjects relatedSlugs={post.relatedProjects} />
+              )}
             </div>
           </article>
 
           {/* Sidebar */}
           <aside className="hidden lg:block">
             <div className="sticky top-24 space-y-6">
+              {post.series && (
+                <SeriesCard series={post.series} currentSlug={post.slug} allPosts={posts} />
+              )}
               <TableOfContents body={post.body} />
               <AuthorCard compact />
             </div>
