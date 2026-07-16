@@ -60,17 +60,28 @@ export const posts: Post[] = [
     slug: 'america-vs-china-ai',
     file: 'america-vs-china-ai.md',
     title: 'The Quiet Race: How Chinese AI Models Are Catching Up',
-    description: '',
+    description:
+      'GLM, DeepSeek, Qwen — open-source models out of China are closing the gap on GPT-4 and Claude faster than most people realise.',
     date: '2025-07-10',
+    updatedDate: '2025-07-15',
     excerpt:
       'GLM, DeepSeek, Qwen — open-source models out of China are closing the gap on GPT-4 and Claude faster than most people realise. Here is what the benchmarks actually say, and what it means for developers right now.',
-    tags: ['ai', 'technology', 'geopolitics', 'open-source'],
+    tags: ['ai', 'technology', 'geopolitics', 'open-source', 'deepseek', 'llm'],
     category: 'ai',
-    articleType: 'opinion',
-    difficulty: 'beginner',
+    articleType: 'research',
+    difficulty: 'intermediate',
     readingMinutes: 11,
-    wordCount: 0,
+    wordCount: 1850,
     featured: true,
+    status: 'updated',
+    license: 'CC BY-NC 4.0',
+    series: {
+      name: 'The AI Landscape',
+      part: 1,
+      total: 3,
+    },
+    relatedPosts: ['how-people-think-about-ai'],
+    relatedProjects: ['quizforge', 'college-sahayak'],
     body: `# The Quiet Race: How Chinese AI Models Are Catching Up
 
 There is a story the Western tech press likes to tell about AI. It goes something like this: OpenAI leads, Anthropic pushes back, Google plays catch-up, and somewhere in the background, Chinese labs are working on inferior imitations gated behind the Great Firewall. The narrative is tidy, patriotic, and increasingly wrong.
@@ -137,17 +148,27 @@ The race is not quiet anymore. Pay attention.`,
     slug: 'how-people-think-about-ai',
     file: 'how-people-think-about-ai.md',
     title: 'Four Ways People Think About AI — And One That Actually Makes Sense',
-    description: '',
+    description:
+      'AI builders, AI deniers, AI fearers, and people who just use it. Here is how I map the landscape in mid-2025.',
     date: '2025-07-14',
     excerpt:
       'AI builders, AI deniers, AI fearers, and people who just use it. Here is how I map the landscape in mid-2025, and why I think the productivity unlock is still massively underestimated — including by the people building the tools.',
-    tags: ['ai', 'opinion', 'productivity', 'career'],
+    tags: ['ai', 'opinion', 'productivity', 'career', 'learning'],
     category: 'opinion',
     articleType: 'opinion',
     difficulty: 'beginner',
     readingMinutes: 12,
-    wordCount: 0,
+    wordCount: 2400,
     featured: true,
+    status: 'published',
+    license: 'CC BY-NC 4.0',
+    series: {
+      name: 'The AI Landscape',
+      part: 2,
+      total: 3,
+    },
+    relatedPosts: ['america-vs-china-ai'],
+    relatedProjects: ['the-future-you', 'persona'],
     body: `# Four Ways People Think About AI — And One That Actually Makes Sense
 
 I have been building software for about three years. In that time, I have watched the way people talk about AI shift from curious-and-excited to polarised in a way that makes genuine conversation increasingly hard. Everyone seems to have found a camp, and the camps are not always talking to each other honestly.
